@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+        <services>
+            <defaults public="false" />
+
+            <service id="foundation.maker.auto_command.abstract" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" abstract="true">
+                <argument /> <!-- maker -->
+                <argument type="service" id="maker.file_manager" />
+                <argument type="service" id="foundation.maker.generator" />
+            </service>
+
+            <service id="foundation.maker.generator" class="Symfony\Bundle\MakerBundle\Generator\Generator">
+                <argument type="service" id="maker.file_manager" />
+                <argument /> <!-- root namespace -->
+            </service>
+        </services>
+</container>

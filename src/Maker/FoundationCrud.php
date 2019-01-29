@@ -5,13 +5,14 @@ namespace MoncareyWS\FoundationBundle\Maker;
 
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
-use Symfony\Bundle\MakerBundle\Generator;
+use MoncareyWS\FoundationBundle\Generator\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
 use Symfony\Bundle\MakerBundle\Renderer\FormTypeRenderer;
 use Symfony\Bundle\MakerBundle\Str;
+use Symfony\Component\Console\Input\InputArgument;
 
 class FoundationCrud extends AbstractFoundationMaker
 {
@@ -31,7 +32,7 @@ class FoundationCrud extends AbstractFoundationMaker
      */
     public static function getCommandName(): string
     {
-        return 'make:foundation:crud';
+        return 'foundation:make:crud';
     }
 
     /**

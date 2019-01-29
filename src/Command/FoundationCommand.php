@@ -11,12 +11,12 @@
 
 namespace MoncareyWS\FoundationBundle\Command;
 
+use MoncareyWS\FoundationBundle\Maker\FoundationMakerInterface;
 use Symfony\Bundle\MakerBundle\ApplicationAwareMakerInterface;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\FileManager;
-use Symfony\Bundle\MakerBundle\Generator;
+use MoncareyWS\FoundationBundle\Generator\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
-use Symfony\Bundle\MakerBundle\MakerInterface;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -37,7 +37,7 @@ final class FoundationCommand extends Command
     private $io;
     private $generator;
 
-    public function __construct(MakerInterface $maker, FileManager $fileManager, Generator $generator)
+    public function __construct(FoundationMakerInterface $maker, FileManager $fileManager, Generator $generator)
     {
         $this->maker = $maker;
         $this->fileManager = $fileManager;

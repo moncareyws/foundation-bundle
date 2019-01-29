@@ -13,7 +13,7 @@
                 <argument type="service" id="foundation.maker.generator" />
             </service>
 
-            <service id="foundation.maker.generator" class="Symfony\Bundle\MakerBundle\Generator\Generator">
+            <service id="foundation.maker.generator" class="MoncareyWS\FoundationBundle\Generator\Generator">
                 <argument type="service" id="maker.file_manager" />
                 <argument /> <!-- root namespace -->
             </service>

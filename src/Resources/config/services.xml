@@ -7,7 +7,7 @@
         <services>
             <defaults public="false" />
 
-            <service id="foundation.maker.auto_command.abstract" class="Symfony\Bundle\MakerBundle\Command\MakerCommand" abstract="true">
+            <service id="foundation.maker.auto_command.abstract" class="MoncareyWS\FoundationBundle\Command\FoundationCommand" abstract="true">
                 <argument /> <!-- maker -->
                 <argument type="service" id="maker.file_manager" />
                 <argument type="service" id="foundation.maker.generator" />

@@ -2,7 +2,7 @@
 
 namespace MoncareyWS\FoundationBundle\DependencyInjection\CompilerPass;
 
-use Symfony\Bundle\MakerBundle\Command\MakerCommand;
+use MoncareyWS\FoundationBundle\Command\FoundationCommand;
 use Symfony\Bundle\MakerBundle\MakerInterface;
 use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -25,7 +25,7 @@ class FoundationCommandRegistrationPass implements CompilerPassInterface
             }
 
             $commandDefinition = new ChildDefinition('foundation.maker.auto_command.abstract');
-            $commandDefinition->setClass(MakerCommand::class);
+            $commandDefinition->setClass(FoundationCommand::class);
             $commandDefinition->replaceArgument(0, new Reference($id));
             $commandDefinition->addTag('console.command', ['command' => $class::getCommandName()]);
 

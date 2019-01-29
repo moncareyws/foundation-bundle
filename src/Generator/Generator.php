@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: samuel
- * Date: 27/01/19
- * Time: 18:38
- */
 
 namespace MoncareyWS\FoundationBundle\Generator;
 

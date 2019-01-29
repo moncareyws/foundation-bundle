@@ -3,7 +3,7 @@
 namespace MoncareyWS\FoundationBundle\DependencyInjection;
 
 use MoncareyWS\FoundationBundle\DependencyInjection\CompilerPass\FoundationCommandRegistrationPass;
-use Symfony\Bundle\MakerBundle\MakerInterface;
+use MoncareyWS\FoundationBundle\Maker\FoundationMakerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -36,7 +36,7 @@ class FoundationExtension extends Extension
 //        $doctrineHelperDefinition = $container->getDefinition('maker.doctrine_helper');
 //        $doctrineHelperDefinition->replaceArgument(0, $rootNamespace.'\\Entity');
 
-        $container->registerForAutoconfiguration(MakerInterface::class)
+        $container->registerForAutoconfiguration(FoundationMakerInterface::class)
             ->addTag(FoundationCommandRegistrationPass::FOUNDATION_MAKER_TAG);
     }
 }

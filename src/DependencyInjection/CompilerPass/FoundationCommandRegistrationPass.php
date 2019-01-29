@@ -3,7 +3,7 @@
 namespace MoncareyWS\FoundationBundle\DependencyInjection\CompilerPass;
 
 use MoncareyWS\FoundationBundle\Command\FoundationCommand;
-use Symfony\Bundle\MakerBundle\MakerInterface;
+use MoncareyWS\FoundationBundle\Maker\FoundationMakerInterface;
 use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -20,8 +20,8 @@ class FoundationCommandRegistrationPass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds(self::FOUNDATION_MAKER_TAG) as $id => $tags) {
             $def = $container->getDefinition($id);
             $class = $container->getParameterBag()->resolveValue($def->getClass());
-            if (!is_subclass_of($class, MakerInterface::class)) {
-                throw new InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, MakerInterface::class));
+            if (!is_subclass_of($class, FoundationMakerInterface::class)) {
+                throw new InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, FoundationMakerInterface::class));
             }
 
             $commandDefinition = new ChildDefinition('foundation.maker.auto_command.abstract');

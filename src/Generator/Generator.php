@@ -2,7 +2,6 @@
 
 namespace MoncareyWS\FoundationBundle\Generator;
 
-use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\Generator as MakerGenerator;
 
 

@@ -14,7 +14,7 @@ namespace MoncareyWS\FoundationBundle\Command;
 use MoncareyWS\FoundationBundle\Maker\FoundationMakerInterface;
 use Symfony\Bundle\MakerBundle\ApplicationAwareMakerInterface;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
-use Symfony\Bundle\MakerBundle\FileManager;
+use MoncareyWS\FoundationBundle\Generator\FileManager;
 use MoncareyWS\FoundationBundle\Generator\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Validator;

@@ -6,7 +6,7 @@
 {% block phpdoc_method_annotations %}
 {% if 'annotation' == format %}
      *
-     * @Route("/{{ '{' ~ entity_identifier ~ '}' }}/edit", name="{{ route_name }}_edit", methods={"GET", "POST"})
+     * @Route("/edit/{{ '{' ~ entity_identifier ~ '}' }}", name="{{ route_name }}_edit", methods={"GET", "POST"})
 {% endif %}
 {% endblock phpdoc_method_annotations %}
      */

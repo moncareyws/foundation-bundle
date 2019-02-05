@@ -1,13 +1,10 @@
-{% block extends %}
-    {{ "{% extends '@"~bundle|slice(0, -6)~"/Shared/page.html.twig' %}" }}
-{% endblock extends %}
+{{ "{% extends '@foundation/base.html.twig' %}" }}
 
-{% block body %}
 {{ "{% block content %}" }}
 
-    <h1>Delete {{ entity }}</h1>
+    <h1>Delete {{ entity_twig_var_singular|capitalize }}</h1>
 
-    <p>Are you sure you want to delete this {{ entity_singularized }}?</p>
+    <p>Are you sure you want to delete this {{ entity_twig_var_singular }}?</p>
 
     {{ '{{ form_start(form) }}' }}
 
@@ -24,4 +21,3 @@
     {{ '{{ form_end(form) }}' }}
 
 {{ "{% endblock %}" }}
-{% endblock body %}

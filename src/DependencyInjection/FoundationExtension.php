@@ -22,8 +22,18 @@ class FoundationExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container)
     {
         foreach ($container->getExtensionConfig('twig') as $config) {
-            if (!isset($config['paths'])) $config['paths'] = [];
+
+            if (!isset($config['paths']))
+                $config['paths'] = [];
+
+            $config['paths'][__DIR__.'/../Resources/views'] = 'foundation';
             $config['paths'][__DIR__.'/../Resources/skeleton'] = 'foundation_skeleton';
+
+            if (!isset($config['form_themes']))
+                $config['form_themes'] = [];
+
+            $config['form_themes'][] = '@foundation/form/fields.html.twig';
+
             $container->loadFromExtension('twig', $config);
         }
     }

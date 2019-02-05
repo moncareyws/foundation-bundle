@@ -1,0 +1,187 @@
+{% block form_start %}
+    {% set method = method|lower %}
+    {% set form_method = (method == 'get' or method == 'post') ? method : 'post' %}
+    <form name="{{ name }}" method="{{ form_method }}" action="{{ action }}"{% for key, value in attr %} {{ key }}="{{ value }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %} novalidate>
+    {% if form_method != method %}
+        <input type="hidden" name="_method" value="{{ method|upper }}" />
+    {% endif %}
+{% endblock %}
+
+{% block form_row %}
+    <div class="small-12 columns">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block form_label %}
+    {% if required %}{% set label_attr = label_attr|merge({'class': ((label_attr.class is defined ? label_attr.class|trim ~ ' ' ) ~ 'required')}) %}{% endif %}
+    {% if errors is not empty %}{% set label_attr = label_attr|merge({'class': ((label_attr.class is defined ? label_attr.class|trim ~ ' ' ) ~ 'is-invalid-label')}) %}{% endif %}
+    {% set label_attr = label_attr|merge({'for': id}) %}
+    {% if not label %}{% set label = name|humanize %}{% endif %}
+    <label{% for k, v in label_attr %} {{ k }}="{{ v }}"{% endfor %}>
+        {{ label }}
+    </label>
+{% endblock %}
+
+{% block button_row %}
+    <div class="small-12 columns">
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block form_errors %}
+    {% if errors is not empty %}
+        <div data-alert class="alert-box alert">
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+            <a href="#" class="close-alert">&times;</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block date_widget %}
+    <input type="text" name="{{ full_name }}" id="{{ id }}"{% if value %} value="{{ value }}"{% endif %}
+           data-datepicker data-format="DD/MM/YYYY" data-weekstart="1" autocomplete="off">
+
+{% endblock %}
+
+{% block datetime_widget %}
+    <input type="text" name="{{ full_name }}" id="{{ id }}"{% if value %} value="{{ value }}"{% endif %}
+           data-datepicker data-format="DD/MM/YYYY HH:mm" data-weekstart="1" data-time="true" autocomplete="off">
+
+{% endblock %}
+
+{% block textarea_widget %}
+    {%  set attr = attr|merge({'rows': 5}) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+
+{% endblock %}
+
+{% block money_widget %}
+    <div class="input-group">
+        <span class="input-group-label">{{ money_pattern|replace({'{{ widget }}': ''})|trim }}</span>
+        <input class="input-group-field" type="text" name="{{ full_name }}" value="{{ form.vars.value }}" >
+    </div>
+{% endblock %}
+
+{% block ajax_image_widget %}
+    <input type="hidden" name="{{ full_name }}" value="{{ data ? data : default_image }}"
+           data-ajax-image data-default-image="{{ data ? data : default_image }}"
+           data-upload-destination="{{ upload_destination }}"
+           data-upload-url="{{ upload_url }}">
+
+{% endblock %}
+
+{% block collection_widget %}
+    {% set close_btn =
+    '<button class="button alert form-collection-delete" aria-label="Delete" type="button" data-close><i class="fa fa-trash"></i> Delete</button>'
+    %}
+    {% set proto_name = prototype.vars.name %}
+    <div class="form-collection"
+         data-form-collection
+         data-prototype="{{ form_widget(prototype)|escape }}"
+         data-prototype-name="{{ prototype.vars.name }}"
+         data-wrapper="<div class='row' data-name='{{ prototype.vars.name }}' data-closable='fade-out'></div>"
+         data-close-btn="{{ close_btn }}">
+
+        <div></div>
+
+        {% for child in form.children %}
+            <div class="row" data-name="{{ child.vars.name }}" data-closable>
+                {{ form_widget(child) }}
+                {{ close_btn|raw }}
+            </div>
+        {% endfor %}
+        <a class="button form-collection-add"><i class="fa fa-plus"></i> Add</a>
+    </div>
+
+{% endblock %}
+
+{% block fdn_drop_down_widget %}
+    {% spaceless %}
+        <input type="hidden" {{ block('widget_attributes') }}{{ (form.vars.value is same as(false)) ?: ' value=' ~ (form.vars.value.id is defined ? form.vars.value.id : form.vars.value )}}>
+        <ul class="dropdown" data-dropdown-menu>
+            <li>
+                <a></a>
+            </li>
+        </ul>
+        {% for placeholder in form %}
+            {{ dump(placeholder) }}
+            {% if placeholder.vars.name == 'placeholder' %}
+                <div class="text-dropdown" data-dropdown="{{ form.vars.id }}-dropdown" aria-controls="{{ form.vars.id }}-dropdown" aria-expanded="false" >
+                    <input type="text" value="{{ (form.vars.value is same as(false)) ? placeholder.vars.label : form.vars.value }}" id="{{ form.vars.id }}-display">
+                </div>
+            {% endif %}
+        {% endfor %}
+        <ul id="{{ form.vars.id }}-dropdown" data-dropdown-content class="select-dropdown" aria-hidden="true">
+            {% for child in form %}
+                {% if child.vars.name != 'placeholder' %}
+                    <li>
+                        <a data-value="{{ child.vars.value }}" data-input-id="{{ form.vars.id }}">{{ child.vars.label }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endspaceless %}
+{% endblock %}
+
+{% block custom_select_widget %}
+
+    <div class="select-dropdown" data-input="#{{ id }}" data-view="#{{ id }}_view" data-options="#{{ id }}_options">
+        <input type="hidden" id="{{ id }}" name="{{ full_name }}"{{ (form.vars.value is same as(false)) ?: ' value=' ~ (form.vars.value.id is defined ? form.vars.value.id : form.vars.value )}}>
+        <input type="text" class="select-dropdown-input" id="{{ id }}_view" name="{{ name }}_view" placeholder="{{ placeholder }}" data-toggle="{{ id }}_dropdown" readonly  value="{{ (form.vars.value is same as(false)) ? placeholder.vars.label : form.vars.data }}">
+        <div class="dropdown-pane" id="{{ id }}_dropdown" data-dropdown data-close-on-click="true">
+            <ul class="select-dropdown-list" id="{{ id }}_options">
+                {% for choice in choices %}
+
+                    <li class="select-dropdown-option">
+                        <a data-value="{{ choice.value }}" >{{ choice.label }}</a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+        <i class="fa fa-caret-down select-dropdown-caret" data-toggle="{{ id }}_dropdown"></i>
+    </div>
+
+{% endblock %}
+
+{% block fdn_choice_widget %}
+    {{ block('custom_select_widget') }}
+{% endblock %}
+
+{% block choise_widget %}
+    {{ block('custom_select_widget') }}
+{% endblock %}
+
+{% block entity_widget %}
+    {{ block('custom_select_widget') }}
+{% endblock %}
+
+{% block fdn_entity_widget %}
+    {% if create_new_button %}
+        <div class="form-entity-reference-wrapper has-create-button">
+            {{ block('custom_select_widget') }}
+            <span class="inline-form-or">or</span>
+            <a class="create-button modal-link"
+               href="{{ create_new_button.href }}?dropdown_id={{ form.vars.id }}"
+               data-reveal-id="ajax-modal"
+               data-reveal-ajax="true">
+                {{ create_new_button.label }}
+            </a>
+        </div>
+    {% else %}
+        <div class="form-entity-reference-wrapper">
+            {{ block('custom_select_widget') }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block form_end %}
+    </form>
+{% endblock %}

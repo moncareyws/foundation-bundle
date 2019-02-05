@@ -244,12 +244,11 @@ class FoundationCrud extends AbstractFoundationMaker
         );
 
         $templates = [
-            '_delete_form' => [
+            'delete' => [
                 'route_name' => $routeNamePrefix,
                 'entity_twig_var_singular' => $entityTwigVarSingular,
                 'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
             ],
-            '_form' => [],
             'edit' => [
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_singular' => $entityTwigVarSingular,
@@ -263,8 +262,9 @@ class FoundationCrud extends AbstractFoundationMaker
                 'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
                 'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
                 'route_name' => $routeNamePrefix,
+                'templates_path' => $templatesPath,
             ],
-            'new' => [
+            'create' => [
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'route_name' => $routeNamePrefix,
             ],
@@ -274,16 +274,32 @@ class FoundationCrud extends AbstractFoundationMaker
                 'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
                 'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
                 'route_name' => $routeNamePrefix,
+                'templates_path' => $templatesPath,
             ],
+            "{$entityTwigVarSingular}_view_mode/{$entityTwigVarSingular}_detail" => [
+                'entity_class_name' => $entityClassDetails->getShortName(),
+                'entity_twig_var_singular' => $entityTwigVarSingular,
+                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+                'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
+                'route_name' => $routeNamePrefix,
+            ],
+            "{$entityTwigVarSingular}_view_mode/{$entityTwigVarSingular}_teaser" => [
+                'entity_class_name' => $entityClassDetails->getShortName(),
+                'entity_twig_var_singular' => $entityTwigVarSingular,
+                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+                'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
+                'route_name' => $routeNamePrefix,
+            ],
+
         ];
 
-//        foreach ($templates as $template => $variables) {
-//            $generator->generateFile(
-//                'templates/'.$templatesPath.'/'.$template.'.html.twig',
-//                'crud/templates/'.$template.'.tpl.php',
-//                $variables
-//            );
-//        }
+        foreach ($templates as $template => $variables) {
+            $generator->generateFile(
+                'templates/'.$templatesPath.'/'.$template.'.html.twig',
+                'crud/views/'.$template.'.html.twig.twig',
+                $variables
+            );
+        }
 
         $generator->writeChanges();
 

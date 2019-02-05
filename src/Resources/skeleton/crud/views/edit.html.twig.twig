@@ -1,11 +1,8 @@
-{% block extends %}
-{{ "{% extends '@"~bundle|slice(0, -6)~"/Shared/page.html.twig' %}" }}
-{% endblock extends %}
+{{ "{% extends '@foundation/base.html.twig' %}" }}
 
-{% block body %}
 {{ "{% block content %}" }}
 
-    <h1>Edit {{ entity }}</h1>
+    <h1>Edit {{ entity_class_name }}</h1>
 
     {{ '{{ form_start(form) }}' }}
 
@@ -19,7 +16,7 @@
             <i class="fa fa-times"></i>
             Cancel
         </a>
-        <a class="button" href="{{ "{{ path('" ~ route_name_prefix ~ "_delete', { '" ~ route_entity_parameter ~ "': " ~ entity_singularized ~ "."~ route_entity_parameter ~" }) }}" }}">
+        <a class="button" href="{{ "{{ path('" ~ route_name ~ "_delete', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
             <i class="fa fa-trash"></i>
             Remove
         </a>

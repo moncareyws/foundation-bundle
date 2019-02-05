@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+{% block body %}
+    <route id="{{ route_name_prefix }}_index" path="/{{ route_prefix_pluralized }}" methods="GET">
+        <default key="_controller">{{ bundle }}:{{ entity }}:index</default>
+    </route>
+
+{% if 'create' in actions %}
+    <route id="{{ route_name_prefix }}_create" path="/{{ route_prefix }}/create" methods="GET|POST">
+        <default key="_controller">{{ bundle }}:{{ entity }}:create</default>
+    </route>
+{% endif %}
+
+    <route id="{{ route_name_prefix }}_show" path="/{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/show" methods="GET">
+        <default key="_controller">{{ bundle }}:{{ entity }}:show</default>
+    </route>
+
+{% if 'edit' in actions %}
+    <route id="{{ route_name_prefix }}_edit" path="/{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/edit" methods="GET|POST">
+        <default key="_controller">{{ bundle }}:{{ entity }}:edit</default>
+    </route>
+{% endif %}
+
+{% if 'delete' in actions %}
+    <route id="{{ route_name_prefix }}_delete" path="/{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/delete" methods="GET|DELETE">
+        <default key="_controller">{{ bundle }}:{{ entity }}:delete</default>
+    </route>
+{% endif %}
+{% endblock body %}
+
+</routes>

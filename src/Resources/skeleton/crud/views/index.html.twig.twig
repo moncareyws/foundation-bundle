@@ -1,0 +1,20 @@
+{% block extends %}
+{{ "{% extends '@"~bundle|slice(0, -6)~"/Shared/page.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+{{ "{% block content %}" }}
+
+    <h1>{{ entity_pluralized|capitalize }}</h1>
+    {% if 'create' in actions -%}
+
+    <a class="button" href="{{ "{{ path('" ~ route_name_prefix ~ "_create') }}" }}">Create a new {{ entity }}</a>
+    {%- endif %}
+    {{ '{% for ' ~ entity_singularized ~ ' in ' ~ entity_pluralized ~ ' %}' }}
+
+    <div class="small-12 column {{ entity_singularized }}">
+        {{ "{{ include('@"~bundle|slice(0, -6)~"/"~entity~"/"~entity~"ViewMode/"~entity_singularized~"_teaser.html.twig') }}" }}
+    </div>
+    {{ '{% endfor %}' }}
+{{ "{% endblock %}" }}
+{% endblock body %}

@@ -1,0 +1,31 @@
+
+    /**
+{% block phpdoc_method_header %}
+     * Creates a new {{ entity }}.
+{% endblock phpdoc_method_header %}
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     *
+     * @Route("/create", name="{{ route_name }}_create", methods={"GET","POST"})
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+    public function new(Request $request): Response
+    {
+        ${{ entity_var_singular }} = new {{ entity_class_name }}();
+        $form = $this->createForm({{ form_class_name }}::class, ${{ entity_var_singular }});
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist(${{ entity_var_singular }});
+            $entityManager->flush();
+
+            return $this->redirectToRoute('{{ route_name }}_index');
+        }
+
+        return $this->render('{{ templates_path }}/new.html.twig', [
+            '{{ entity_twig_var_singular }}' => ${{ entity_var_singular }},
+            'form' => $form->createView(),
+        ]);
+    }

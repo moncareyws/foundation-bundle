@@ -1,0 +1,15 @@
+{% block extends %}
+{{ "{% extends '@"~bundle|slice(0, -6)~"/Shared/page.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+{{ "{% block content %}" }}
+
+    <h1>{{ entity }}</h1>
+
+    <div class="small-12 column {{ entity|lower }}">
+        {{ "{{ include('@"~bundle|slice(0, -6)~"/"~entity~"/"~entity~"ViewMode/"~entity_singularized~"_detail.html.twig') }}" }}
+    </div>
+
+{{ "{% endblock %}" }}
+{% endblock body %}

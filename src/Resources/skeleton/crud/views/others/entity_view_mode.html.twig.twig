@@ -1,0 +1,75 @@
+
+    <dl>
+    {%- for field, metadata in fields %}
+
+        <dt>{{ field|capitalize }}</dt>
+        {%- if loop.first and ('show' in actions) and (not hide_show) %}
+
+            <dd><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { '" ~ route_entity_parameter ~ "': " ~ entity_singularized ~ "."~ route_entity_parameter ~" }) }}" }}">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></dd>
+
+        {%- elseif metadata.type in ['datetime'] %}
+
+            <dd>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</dd>
+
+        {%- elseif metadata.type in ['date'] %}
+
+            <dd>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</dd>
+
+        {%- elseif metadata.type in ['time'] %}
+
+            <dd>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</dd>
+
+        {%- elseif metadata.type in ['array'] %}
+
+            <dd>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</dd>
+
+        {%- elseif metadata.type in ['boolean'] %}
+
+            <dd>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</dd>
+
+        {%- else %}
+
+            <dd>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</dd>
+
+        {%- endif %}
+
+        {%- if loop.last %}
+
+        <dt>Actions</dt>
+            <dd>
+                {%- if ('show' in actions) and (not hide_show) %}
+
+                <a class="button" href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { '" ~ route_entity_parameter ~ "': " ~ entity_singularized ~ "."~ route_entity_parameter ~" }) }}" }}">
+                    View
+                </a>
+
+                {%- else %}
+
+                <a class="button" href="{{ "{{ path('" ~ route_name_prefix ~ "_index') }}" }}">
+                    <i class="fa fa-chevron-left"></i>
+                    Back to list
+                </a>
+
+                {%- endif %}
+                {%- if ('edit' in actions) and (not hide_edit) %}
+
+                <a class="button" href="{{ "{{ path('" ~ route_name_prefix ~ "_edit', { '" ~ route_entity_parameter ~ "': " ~ entity_singularized ~ "."~ route_entity_parameter ~" }) }}" }}">
+                    <i class="fa fa-edit"></i>
+                    Edit
+                </a>
+
+                {%- endif %}
+                {%- if ('delete' in actions) and (not hide_delete) %}
+
+                <a class="button" href="{{ "{{ path('" ~ route_name_prefix ~ "_delete', { '" ~ route_entity_parameter ~ "': " ~ entity_singularized ~ "."~ route_entity_parameter ~" }) }}" }}">
+                    <i class="fa fa-trash"></i>
+                    Delete
+                </a>
+
+                {%- endif %}
+            </dd>
+
+        {%- endif %}
+    {%- endfor %}
+
+    </dl>

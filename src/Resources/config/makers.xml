@@ -9,7 +9,7 @@
 
             <service id="foundation.maker.make_crud" class="MoncareyWS\FoundationBundle\Maker\FoundationCrud">
                 <argument type="service" id="maker.doctrine_helper" />
-                <argument type="service" id="maker.renderer.form_type_renderer" />
+                <argument type="service" id="foundation.renderer.form_type_renderer" />
                 <tag name="foundation.maker.command" />
             </service>
         </services>

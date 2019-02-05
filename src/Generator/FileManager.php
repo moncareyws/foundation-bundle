@@ -21,6 +21,7 @@ class FileManager extends MakerFileManager
     public function parseTemplate(string $templatePath, array $parameters): string
     {
         if (pathinfo($templatePath, PATHINFO_EXTENSION) == 'twig') {
+//            fwrite(STDOUT, print_r($parameters, true));
             return $this->twig->render($templatePath, $parameters);
         }
 

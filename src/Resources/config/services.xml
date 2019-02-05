@@ -24,5 +24,9 @@
                 <argument type="service" id="foundation.maker.file_manager" />
                 <argument /> <!-- root namespace -->
             </service>
+
+            <service id="foundation.renderer.form_type_renderer" class="MoncareyWS\FoundationBundle\Renderer\FormTypeRenderer">
+                <argument type="service" id="foundation.maker.generator" />
+            </service>
         </services>
 </container>

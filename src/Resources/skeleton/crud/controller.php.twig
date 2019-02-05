@@ -1,0 +1,43 @@
+<?php
+
+namespace {{ namespace }};
+
+{% block use_statements %}
+use {{ entity_full_class_name }};
+use {{ form_full_class_name }};
+{% if repository_full_class_name -%}
+use {{ repository_full_class_name }};
+{% endif %}
+use Symfony\Bundle\FrameworkBundle\Controller\{{ parent_class_name }};
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+{% if 'annotation' == format -%}
+use Symfony\Component\Routing\Annotation\Route;
+{%- endif %}
+{% endblock use_statements %}
+
+/**
+{% block phpdoc_class_header %}
+ * {{ entity }} controller.
+{% endblock phpdoc_class_header %}
+{% block phpdoc_class_annotations %}
+{% if 'annotation' == format %}
+ *
+ * @Route("/{{ route_path }}")
+{% endif %}
+{% endblock phpdoc_class_annotations %}
+ */
+class {{ class_name }} extends {{ parent_class_name }}
+{
+{% block class_body %}
+    {%- include '@foundation_skeleton/crud/actions/index.php.twig' %}
+
+    {%- include '@foundation_skeleton/crud/actions/create.php.twig' %}
+
+    {%- include '@foundation_skeleton/crud/actions/show.php.twig' %}
+
+    {%- include '@foundation_skeleton/crud/actions/edit.php.twig' %}
+
+    {%- include '@foundation_skeleton/crud/actions/delete.php.twig' %}
+{% endblock class_body %}
+}

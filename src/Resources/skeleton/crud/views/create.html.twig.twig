@@ -1,0 +1,25 @@
+{% block extends %}
+{{ "{% extends '@"~bundle|slice(0, -6)~"/Shared/page.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+{{ "{% block content %}" }}
+
+    <h1>Create new {{ entity }}</h1>
+
+    {{ '{{ form_start(form) }}' }}
+
+        {{ '{{ form_widget(form) }}' }}
+
+        <button type="submit" class="button">
+            <i class="fa fa-save"></i>
+            Create
+        </button>
+        <a class="button" href="{{ "{{ app.request.headers.get('referer') }}" }}">
+            <i class="fa fa-times"></i>
+            Cancel
+        </a>
+    {{ '{{ form_end(form) }}' }}
+
+{{ "{% endblock %}" }}
+{% endblock body %}

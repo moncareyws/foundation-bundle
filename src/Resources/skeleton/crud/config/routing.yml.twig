@@ -1,0 +1,34 @@
+{% if 'index' in actions %}
+{{ route_name_prefix }}_index:
+    path:     /{{ route_prefix_pluralized }}
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
+    methods:  GET
+{% endif %}
+
+{% if 'create' in actions %}
+{{ route_name_prefix }}_create:
+    path:     /{{ route_prefix }}/create
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:create" }
+    methods:  [GET, POST]
+{% endif %}
+
+{% if 'show' in actions %}
+{{ route_name_prefix }}_show:
+    path:     /{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:show" }
+    methods:  GET
+{% endif %}
+
+{% if 'edit' in actions %}
+{{ route_name_prefix }}_edit:
+    path:     /{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/edit
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:edit" }
+    methods:  [GET, POST]
+{% endif %}
+
+{% if 'delete' in actions %}
+{{ route_name_prefix }}_delete:
+    path:     /{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/delete
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
+    methods:  [GET, DELETE]
+{% endif %}

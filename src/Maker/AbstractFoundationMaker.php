@@ -48,4 +48,12 @@ abstract class AbstractFoundationMaker implements FoundationMakerInterface
             $message
         );
     }
+
+    protected function dump($var, ConsoleStyle $io)
+    {
+        ob_start();
+        print_r($var);
+        $dump = ob_get_clean();
+        $io->text($dump);
+    }
 }

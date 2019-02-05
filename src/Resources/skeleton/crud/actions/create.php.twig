@@ -24,7 +24,7 @@
             return $this->redirectToRoute('{{ route_name }}_index');
         }
 
-        return $this->render('{{ templates_path }}/new.html.twig', [
+        return $this->render('{{ templates_path }}/create.html.twig', [
             '{{ entity_twig_var_singular }}' => ${{ entity_var_singular }},
             'form' => $form->createView(),
         ]);

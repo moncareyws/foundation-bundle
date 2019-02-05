@@ -4,7 +4,7 @@
 
     <h1>{{ entity_twig_var_plural|capitalize }}</h1>
 
-    <a class="button" href="{{ "{{ path('" ~ route_name ~ "_create') }}" }}">Create a new {{ entity_twig_var_singular }}</a>
+    <a class="button" href="{{ ("{{ path('" ~ route_name ~ "_create') }}")|raw }}">Create a new {{ entity_twig_var_singular }}</a>
 
     {{ '{% for ' ~ entity_twig_var_singular ~ ' in ' ~ entity_twig_var_plural ~ ' %}' }}
 

@@ -9,7 +9,7 @@
     {{ '{% for ' ~ entity_twig_var_singular ~ ' in ' ~ entity_twig_var_plural ~ ' %}' }}
 
     <div class="small-12 column {{ entity_twig_var_singular }}">
-        {{ "{{ include('"~templates_path~"/"~entity_twig_var_singular~"/"~entity_twig_var_singular~"_view_mode/"~entity_twig_var_singular~"_teaser.html.twig') }}"|raw }}
+        {{ ("{{ include('"~templates_path~"/"~entity_twig_var_singular~"/"~entity_twig_var_singular~"_view_mode/"~entity_twig_var_singular~"_teaser.html.twig') }}")|raw }}
     </div>
     {{ '{% endfor %}' }}
 {{ "{% endblock %}" }}

@@ -16,7 +16,7 @@
             <i class="fa fa-times"></i>
             Cancel
         </a>
-        <a class="button" href="{{ "{{ path('" ~ route_name ~ "_delete', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
+        <a class="button" href="{{ "{{ path('" ~ route_name ~ "_delete', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}"|raw }}">
             <i class="fa fa-trash"></i>
             Remove
         </a>

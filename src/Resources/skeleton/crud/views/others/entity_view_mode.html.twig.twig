@@ -3,7 +3,7 @@
     {%- for field, metadata in entity_fields %}
 
         <dt>{{ field|capitalize }}</dt>
-        {%- if loop.first and ('show' in actions) and (not hide_show) %}
+        {%- if loop.first and (not hide_show) %}
 
             <dd><a href="{{ "{{ path('" ~ route_name ~ "_show', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">{{ '{{ ' ~ entity_twig_var_singular ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></dd>
 

@@ -5,7 +5,7 @@
     <h1>{{ entity_class_name }}</h1>
 
     <div class="small-12 column {{ entity_twig_var_singular|lower }}">
-        {{ "{{ include('"~templates_path~"/"~entity_twig_var_singular~"/"~entity_twig_var_singular~"_view_mode/"~entity_twig_var_singular~"_detail.html.twig') }}" }}
+        {{ "{{ include('"~templates_path~"/"~entity_twig_var_singular~"/"~entity_twig_var_singular~"_view_mode/"~entity_twig_var_singular~"_detail.html.twig') }}"|raw }}
     </div>
 
 {{ "{% endblock %}" }}

@@ -276,20 +276,6 @@ class FoundationCrud extends AbstractFoundationMaker
                 'route_name' => $routeNamePrefix,
                 'templates_path' => $templatesPath,
             ],
-            "{$entityTwigVarSingular}_view_mode/{$entityTwigVarSingular}_detail" => [
-                'entity_class_name' => $entityClassDetails->getShortName(),
-                'entity_twig_var_singular' => $entityTwigVarSingular,
-                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
-                'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
-                'route_name' => $routeNamePrefix,
-            ],
-            "{$entityTwigVarSingular}_view_mode/{$entityTwigVarSingular}_teaser" => [
-                'entity_class_name' => $entityClassDetails->getShortName(),
-                'entity_twig_var_singular' => $entityTwigVarSingular,
-                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
-                'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
-                'route_name' => $routeNamePrefix,
-            ],
 
         ];
 
@@ -300,6 +286,24 @@ class FoundationCrud extends AbstractFoundationMaker
                 $variables
             );
         }
+
+        $variables = [
+            'entity_class_name' => $entityClassDetails->getShortName(),
+            'entity_twig_var_singular' => $entityTwigVarSingular,
+            'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+            'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
+            'route_name' => $routeNamePrefix,
+        ];
+        $generator->generateFile(
+            "templates/{$templatesPath}/{$entityTwigVarSingular}_view_mode/{$entityTwigVarSingular}_detail.html.twig",
+            "crud/views/entity_view_mode/entity_detail.html.twig.twig",
+            $variables
+        );
+        $generator->generateFile(
+            "templates/{$templatesPath}/{$entityTwigVarSingular}_view_mode/{$entityTwigVarSingular}_teaser.html.twig",
+            "crud/views/entity_view_mode/entity_teaser.html.twig.twig",
+            $variables
+        );
 
         $generator->writeChanges();
 

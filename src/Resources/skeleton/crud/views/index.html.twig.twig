@@ -3,10 +3,9 @@
 {{ "{% block content %}" }}
 
     <h1>{{ entity_twig_var_plural|capitalize }}</h1>
-    {% if 'create' in actions -%}
 
     <a class="button" href="{{ "{{ path('" ~ route_name ~ "_create') }}" }}">Create a new {{ entity_twig_var_singular }}</a>
-    {%- endif %}
+
     {{ '{% for ' ~ entity_twig_var_singular ~ ' in ' ~ entity_twig_var_plural ~ ' %}' }}
 
     <div class="small-12 column {{ entity_twig_var_singular }}">

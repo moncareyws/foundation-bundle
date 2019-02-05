@@ -37,7 +37,7 @@
 
         <dt>Actions</dt>
             <dd>
-                {%- if ('show' in actions) and (not hide_show) %}
+                {%- if not hide_show %}
 
                 <a class="button" href="{{ "{{ path('" ~ route_name ~ "_show', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
                     View
@@ -51,7 +51,7 @@
                 </a>
 
                 {%- endif %}
-                {%- if ('edit' in actions) and (not hide_edit) %}
+                {%- if not hide_edit %}
 
                 <a class="button" href="{{ "{{ path('" ~ route_name ~ "_edit', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
                     <i class="fa fa-edit"></i>
@@ -59,7 +59,7 @@
                 </a>
 
                 {%- endif %}
-                {%- if ('delete' in actions) and (not hide_delete) %}
+                {%- if not hide_delete %}
 
                 <a class="button" href="{{ "{{ path('" ~ route_name ~ "_delete', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
                     <i class="fa fa-trash"></i>

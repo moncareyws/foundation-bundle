@@ -39,6 +39,18 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        parent::configure();
+        $this
+            ->setDescription('Installs bundles web assets under a public directory, runs \'npm install\' and moves some files to the public directory root')
+            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/FoundationAssetsInstall.txt'))
+        ;
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $exitCode = parent::execute($input, $output);
@@ -103,14 +115,9 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
             }
 
             $io->newLine();
-            $process->wait(function ($type, $buffer) use ($io) {
-                if (Process::ERR === $type) {
-                    $io->error($buffer);
-                }
-                else {
-                    $io->text($buffer);
-                }
-            });
+            $io->text('Waiting for \'npm install\' ...');
+            $io->newLine();
+            $process->wait(function ($type, $buffer) use ($io) {$io->writeln($buffer);});
 
         } catch (\Exception $e) {
             $exitCode = 1;

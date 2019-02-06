@@ -1,0 +1,9 @@
+Runs gulp on the foundation bundle assets in order to build the sass code in the public directory.
+
+-----------------------------------------------------------------------------------------
+-                                                                                       -
+-  --- IMPORTANT ---                                                                    -
+-                                                                                       -
+-  Needs the command 'foundation:assets:install' to have ran in order to work properly  -
+-                                                                                       -
+-----------------------------------------------------------------------------------------

@@ -25,6 +25,17 @@ class FoundationAssetsBuildCommand extends Command
 
     protected static $defaultName = 'foundation:assets:build';
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        $this
+            ->setDescription('Builds the assets from the foundation bundle')
+            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/FoundationAssetsBuild.txt'))
+        ;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
@@ -68,7 +79,7 @@ class FoundationAssetsBuildCommand extends Command
                 if (Process::ERR === $type) {
                     $io->error($buffer);
                 } else {
-                    $io->text($buffer);
+                    $io->writeln($buffer);
                 }
             });
 

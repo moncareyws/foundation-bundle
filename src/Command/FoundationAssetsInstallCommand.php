@@ -76,8 +76,12 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
 
             if (null === $originDir) throw new IOException('Foundation assets have not been installed.');
 
+            $io->text('Running \'npm install\' on assets from the foundation bundle.');
+            $io->newLine();
+
             $process = new Process(['npm','install'], $originDir);
-            $process->disableOutput();
+            $process->setIdleTimeout(null);
+            $process->setTimeout(null);
             $process->start();
 
             $files = [
@@ -86,16 +90,29 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
                 '/scss/_settings.scss'
             ];
 
+            $io->text('Moving assets from foundation bundle ...');
+
             foreach ($files as $file) {
+                $io->text("Moving {$file} ...");
                 if (!file_exists($targetDir.$file)) {
                     $this->filesystem->copy($originDir.$file, $targetDir.$file);
-                    $this->filesystem->remove($originDir.$file);
-                }
+                    $io->text("{$file} copied.");
+                } else $io->text("{$file} already exists, skipping ...");
+                $this->filesystem->remove($originDir.$file);
+                $io->text("Original file removed.");
             }
 
-            $process->wait();
+            $io->newLine();
+            $process->wait(function ($type, $buffer) use ($io) {
+                if (Process::ERR === $type) {
+                    $io->error($buffer);
+                }
+                else {
+                    $io->text($buffer);
+                }
+            });
 
-        } catch (IOException $e) {
+        } catch (\Exception $e) {
             $exitCode = 1;
             $io->error($e->getMessage());
         }

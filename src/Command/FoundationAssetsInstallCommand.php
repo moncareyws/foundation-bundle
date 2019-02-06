@@ -26,6 +26,7 @@ use Symfony\Component\Process\Process;
 
 class FoundationAssetsInstallCommand extends AssetsInstallCommand
 {
+    use CommandNeedsPublicDir;
 
     protected static $defaultName = 'foundation:assets:install';
 
@@ -100,28 +101,5 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
         }
 
         return $exitCode;
-    }
-
-    private function getPublicDirectory(ContainerInterface $container)
-    {
-        $defaultPublicDir = 'public';
-
-        if (!$container->hasParameter('kernel.project_dir')) {
-            return $defaultPublicDir;
-        }
-
-        $composerFilePath = $container->getParameter('kernel.project_dir').'/composer.json';
-
-        if (!file_exists($composerFilePath)) {
-            return $defaultPublicDir;
-        }
-
-        $composerConfig = json_decode(file_get_contents($composerFilePath), true);
-
-        if (isset($composerConfig['extra']['public-dir'])) {
-            return $composerConfig['extra']['public-dir'];
-        }
-
-        return $defaultPublicDir;
     }
 }

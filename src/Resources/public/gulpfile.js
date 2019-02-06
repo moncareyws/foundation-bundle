@@ -3,8 +3,8 @@ var $             = require('gulp-load-plugins')();
 var autoprefixer  = require('autoprefixer');
 
 var sassPaths = [
-  'bundles/foundation/node_modules/foundation-sites/scss',
-  'bundles/foundation/node_modules/motion-ui/src'
+  'node_modules/foundation-sites/scss',
+  'node_modules/motion-ui/src'
 ];
 
 function sass() {

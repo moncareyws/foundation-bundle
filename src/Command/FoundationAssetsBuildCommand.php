@@ -21,6 +21,8 @@ use Symfony\Component\Process\Process;
 
 class FoundationAssetsBuildCommand extends Command
 {
+    use CommandNeedsPublicDir;
+
     protected static $defaultName = 'foundation:assets:build';
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -29,11 +31,7 @@ class FoundationAssetsBuildCommand extends Command
         $exitCode = 0;
         /** @var KernelInterface $kernel */
         $kernel = $this->getApplication()->getKernel();
-        $targetDir = rtrim($input->getArgument('target'), '/');
-
-        if (!$targetDir) {
-            $targetDir = $this->getPublicDirectory($kernel->getContainer());
-        }
+        $targetDir = $this->getPublicDirectory($kernel->getContainer());
 
         if (!is_dir($targetDir)) {
             $targetDir = $kernel->getProjectDir().'/'.$targetDir;
@@ -63,14 +61,14 @@ class FoundationAssetsBuildCommand extends Command
             $io->newLine();
 
             $build = new Process(['gulp'], $cwd);
+            $build->setTimeout(null);
+            $build->setIdleTimeout(null);
 
             $build->run(function ($type, $buffer) use ($io) {
                 if (Process::ERR === $type) {
                     $io->error($buffer);
-                    $io->newLine();
                 } else {
                     $io->text($buffer);
-                    $io->newLine();
                 }
             });
 

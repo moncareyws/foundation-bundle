@@ -33,5 +33,9 @@
                 <argument type="service" id="filesystem" />
                 <tag name="console.command" command="foundation:assets:install" />
             </service>
+
+            <service id="foundation.console.command.assets_build" class="MoncareyWS\FoundationBundle\Command\FoundationAssetsBuildCommand">
+                <tag name="console.command" command="foundation:assets:build" />
+            </service>
         </services>
 </container>

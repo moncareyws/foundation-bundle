@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
 
-class FoundationAssetInstallCommand extends AssetsInstallCommand
+class FoundationAssetsInstallCommand extends AssetsInstallCommand
 {
 
     protected static $defaultName = 'foundation:assets:install';

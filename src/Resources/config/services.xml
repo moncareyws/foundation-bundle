@@ -28,5 +28,10 @@
             <service id="foundation.renderer.form_type_renderer" class="MoncareyWS\FoundationBundle\Renderer\FormTypeRenderer">
                 <argument type="service" id="foundation.maker.generator" />
             </service>
+
+            <service id="foundation.console.command.assets_install" class="MoncareyWS\FoundationBundle\Command\FoundationAssetsInstallCommand">
+                <argument type="service" id="filesystem" />
+                <tag name="console.command" command="foundation:assets:install" />
+            </service>
         </services>
 </container>

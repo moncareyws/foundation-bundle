@@ -17,7 +17,8 @@
     "foundation-sites": "^6.5.1",
     "jquery": ">=3.0.0",
     "motion-ui": "~2.0.0",
-    "what-input": "^5.1.2"
+    "what-input": "^5.1.2",
+    "@fortawesome/fontawesome-free": "^5.7.1"
   },
   "devDependencies": {
     "autoprefixer": "^9.1.5",
@@ -29,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zurb/foundation-sites-template.git"
+    "url": "https://github.com/moncareyws/foundation-sites-template.git"
   },
   "private": true
 }

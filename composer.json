@@ -16,7 +16,8 @@
         "symfony/validator": "^4.2",
         "symfony/yaml": "^4.2",
         "symfony/security-bundle": "^4.2",
-        "symfony/security": "^4.2"
+        "symfony/security": "^4.2",
+        "symfony/process": "^4.2"
     },
     "autoload" : {
         "psr-4" : {

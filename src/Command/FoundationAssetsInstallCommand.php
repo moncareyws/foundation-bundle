@@ -80,7 +80,7 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
             $process->start();
 
             $files = [
-                'gulpfile.js',
+                '/gulpfile.js',
                 '/js/app.js',
                 '/scss/app.scss',
                 '/scss/_settings.scss'

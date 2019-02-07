@@ -108,14 +108,13 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
             if (is_dir($kernel->getProjectDir().'/'.$originDir.$fontawesomeWebfontsPath)) {
                 $webfontsDir = opendir($kernel->getProjectDir().'/'.$originDir.$fontawesomeWebfontsPath);
                 while (false !== ($entry = readdir($webfontsDir))) {
-                    $io->note($entry);
                     if (!in_array($entry, ['.','..'])) {
                         $files["{$fontawesomeWebfontsPath}/{$entry}"] = "/fonts/fontawesome/{$entry}";
                     }
                 }
             }
             else {
-                $io->error($kernel->getProjectDir().'/'."{$originDir}{$fontawesomeWebfontsPath} not found!");
+                $io->error("Fontawesome fonts not found!");
             }
 
             $io->text('Moving assets from foundation bundle ...');
@@ -128,6 +127,8 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
                 }
                 else $io->text("{$file} already exists, skipping ...");
             }
+
+            $io->success("Foundation succesfully installed!\nRun 'foundation:assets:build' to compile the scss and/or sass files");
 
         } catch (\Exception $e) {
             $exitCode = 1;

@@ -94,7 +94,7 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
             $process = new Process(['npm','install'], $originDir);
             $process->setIdleTimeout(null);
             $process->setTimeout(null);
-            $process->start();
+            $process->run(function ($type, $buffer) use ($io) {$io->writeln($buffer);});
 
             $files = [
                 '/js/app.js' => '/js/app.js',
@@ -103,14 +103,19 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
                 '/scss/_fonts.scss' => '/scss/_fonts.scss'
             ];
 
-            $fontawesomeWebfontsPath = "/node_modules/@fontawesome/fontawesome-free/webfonts";
-            if (is_dir($originDir.$fontawesomeWebfontsPath)) {
-                $webfontsDir = opendir($originDir.$fontawesomeWebfontsPath);
+            $fontawesomeWebfontsPath = "/node_modules/@fortawesome/fontawesome-free/webfonts";
+
+            if (is_dir($kernel->getProjectDir().'/'.$originDir.$fontawesomeWebfontsPath)) {
+                $webfontsDir = opendir($kernel->getProjectDir().'/'.$originDir.$fontawesomeWebfontsPath);
                 while (false !== ($entry = readdir($webfontsDir))) {
+                    $io->note($entry);
                     if (!in_array($entry, ['.','..'])) {
                         $files["{$fontawesomeWebfontsPath}/{$entry}"] = "/fonts/fontawesome/{$entry}";
                     }
                 }
+            }
+            else {
+                $io->error($kernel->getProjectDir().'/'."{$originDir}{$fontawesomeWebfontsPath} not found!");
             }
 
             $io->text('Moving assets from foundation bundle ...');
@@ -123,11 +128,6 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
                 }
                 else $io->text("{$file} already exists, skipping ...");
             }
-
-            $io->newLine();
-            $io->text('Waiting for \'npm install\' ...');
-            $io->newLine();
-            $process->wait(function ($type, $buffer) use ($io) {$io->writeln($buffer);});
 
         } catch (\Exception $e) {
             $exitCode = 1;

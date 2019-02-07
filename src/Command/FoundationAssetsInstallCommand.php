@@ -97,21 +97,31 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
             $process->start();
 
             $files = [
-                '/js/app.js',
-                '/scss/app.scss',
-                '/scss/_settings.scss'
+                '/js/app.js' => '/js/app.js',
+                '/scss/app.scss' => '/scss/app.scss',
+                '/scss/_settings.scss' => '/scss/_settings.scss',
+                '/scss/_fonts.scss' => '/scss/_fonts.scss'
             ];
+
+            $fontawesomeWebfontsPath = "/node_modules/@fontawesome/fontawesome-free/webfonts";
+            if (is_dir($originDir.$fontawesomeWebfontsPath)) {
+                $webfontsDir = opendir($originDir.$fontawesomeWebfontsPath);
+                while (false !== ($entry = readdir($webfontsDir))) {
+                    if (!in_array($entry, ['.','..'])) {
+                        $files["{$fontawesomeWebfontsPath}/{$entry}"] = "/fonts/fontawesome/{$entry}";
+                    }
+                }
+            }
 
             $io->text('Moving assets from foundation bundle ...');
 
-            foreach ($files as $file) {
-                $io->text("Moving {$file} ...");
+            foreach ($files as $file => $target) {
+                $io->text("Copying {$file} ...");
                 if (!file_exists($targetDir.$file)) {
-                    $this->filesystem->copy($originDir.$file, $targetDir.$file);
+                    $this->filesystem->copy($originDir.$file, $targetDir.$target);
                     $io->text("{$file} copied.");
-                } else $io->text("{$file} already exists, skipping ...");
-                $this->filesystem->remove($originDir.$file);
-                $io->text("Original file removed.");
+                }
+                else $io->text("{$file} already exists, skipping ...");
             }
 
             $io->newLine();

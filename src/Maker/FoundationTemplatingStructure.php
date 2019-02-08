@@ -91,7 +91,7 @@ class FoundationTemplatingStructure extends AbstractFoundationMaker
      */
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
     {
-        $skeletonDir = realpath(__DIR__.'../Resources/skeleton/templating_structure');
+        $skeletonDir = realpath(__DIR__.'/../Resources/skeleton/templating_structure');
         $templatesDir = "{$this->rootDirectory}/templates";
 
         $this->filesystem->mirror($skeletonDir, $templatesDir);

@@ -1,10 +1,35 @@
 {% extends '@foundation/base.html.twig' %}
 
+{% block title %}Website title{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+
+{% endblock %}
+
 {% block body %}
 
+    <header>
+        {% block header %}
+            {% include 'layout/header.html.twig' %}
+        {% endblock %}
+    </header>
+
     <main>
-        {% block page %}
+        {% block content %}
 
         {% endblock %}
     </main>
-{%- endblock %}
+
+    <footer>
+        {% block footer %}
+            {% include 'layout/footer.html.twig' %}
+        {% endblock %}
+    </footer>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ parent() }}
+
+{% endblock %}

@@ -6,12 +6,3 @@ executes 'npm install' and moves some files from the bundle assets to the given 
 
 A "bundles" directory will be created inside the target directory and the
 "Resources/public" directory of each bundle will be copied into it.
-
-To create a symlink to each bundle instead of copying its assets, use the
-<info>--symlink</info> option (will fall back to hard copies when symbolic links aren't possible:
-
-  <info>php %command.full_name% public --symlink</info>
-
-To make symlink relative, add the <info>--relative</info> option:
-
-  <info>php %command.full_name% public --symlink --relative</info>

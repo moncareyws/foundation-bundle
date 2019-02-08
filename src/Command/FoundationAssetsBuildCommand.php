@@ -9,9 +9,12 @@
 namespace MoncareyWS\FoundationBundle\Command;
 
 
+use MoncareyWS\FoundationBundle\Bundle\BundleHasAssetsToBuild;
 use MoncareyWS\FoundationBundle\FoundationBundle;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -31,6 +34,10 @@ class FoundationAssetsBuildCommand extends Command
     protected function configure()
     {
         $this
+            ->setDefinition(array(
+                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', null),
+            ))
+            ->addOption('watch', null, InputOption::VALUE_NONE, 'Watch for changes', null)
             ->setDescription('Builds the assets from the foundation bundle')
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/FoundationAssetsBuild.txt'))
         ;
@@ -42,36 +49,64 @@ class FoundationAssetsBuildCommand extends Command
         $exitCode = 0;
         /** @var KernelInterface $kernel */
         $kernel = $this->getApplication()->getKernel();
-        $targetDir = $this->getPublicDirectory($kernel->getContainer());
+        $targetArg = rtrim($input->getArgument('target'), '/');
 
-        if (!is_dir($targetDir)) {
-            $targetDir = $kernel->getProjectDir().'/'.$targetDir;
+        if (!$targetArg) {
+            $targetArg = $this->getPublicDirectory($kernel->getContainer());
+        }
 
-            if (!is_dir($targetDir)) {
+        if (!is_dir($targetArg)) {
+            $targetArg = $kernel->getProjectDir().'/'.$targetArg;
+
+            if (!is_dir($targetArg)) {
                 throw new InvalidArgumentException(sprintf('The target directory "%s" does not exist.', $input->getArgument('target')));
             }
         }
 
-        $bundlesDir = $targetDir.'/bundles/';
+        $watchOpt = $input->getOption('watch');
+
+        $bundlesDir = $targetArg.'/bundles/';
         $cwd = null;
+
+        $gulpTask = $watchOpt ? 'default' : 'sass';
 
         $io = new SymfonyStyle($input, $output);
         $io->newLine();
 
         try {
-            foreach ($kernel->getBundles() as $bundle) {
-                if (!($bundle instanceof FoundationBundle)) continue;
 
+            $gulpSassPaths = [];
+
+            foreach ($kernel->getBundles() as $bundle) {
                 $assetDir = preg_replace('/bundle$/', '', strtolower($bundle->getName()));
-                $cwd = $bundlesDir . $assetDir;
+
+                if ($bundle instanceof FoundationBundle)
+                    $cwd = $bundlesDir.$assetDir;
+
+                if ($bundle instanceof BundleHasAssetsToBuild) {
+                    $prefix = '';
+                    if (!($bundle instanceof FoundationBundle))
+                        $prefix = "../../bundles/{$assetDir}/";
+
+                    $gulpSassPathsTmp = $bundle->getGulpSassPaths();
+                    array_walk($gulpSassPathsTmp, function (&$item, $key, $prefix) {
+                        $item = $prefix.$item;
+                    }, $prefix);
+
+                    $gulpSassPaths+= $gulpSassPathsTmp;
+                }
             }
 
-            if (null === $cwd) throw new IOException('Foundation assets are not installed. Run \'foundation:assets:install\' and run this command again.');
+            if (null === $cwd)
+                throw new IOException('Foundation assets are not installed. Run \'foundation:assets:install\' and run this command again.');
 
-            $io->text('Starting gulp');
+            $gulpSassPathsJsonFile = "{$cwd}/gulp_sass_paths.json";
+            file_put_contents($gulpSassPathsJsonFile, json_encode($gulpSassPaths));
+
+            $io->text("Starting gulp {$gulpTask}");
             $io->newLine();
 
-            $build = new Process(['gulp'], $cwd);
+            $build = new Process(['gulp', $gulpTask], $cwd);
             $build->setTimeout(null);
             $build->setIdleTimeout(null);
 
@@ -79,7 +114,7 @@ class FoundationAssetsBuildCommand extends Command
                 if (Process::ERR === $type) {
                     $io->error($buffer);
                 } else {
-                    $io->writeln($buffer);
+                    $io->write($buffer);
                 }
             });
 

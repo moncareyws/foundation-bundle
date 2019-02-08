@@ -23,8 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('root_namespace')->defaultValue('App')->end()
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }

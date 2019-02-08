@@ -8,6 +8,8 @@
 
 namespace MoncareyWS\FoundationBundle\Command;
 
+use MoncareyWS\FoundationBundle\Bundle\BundleHasAssetsToMove;
+use MoncareyWS\FoundationBundle\Bundle\BundleHasNodeModules;
 use MoncareyWS\FoundationBundle\FoundationBundle;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -44,8 +46,10 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
      */
     protected function configure()
     {
-        parent::configure();
         $this
+            ->setDefinition(array(
+                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', null),
+            ))
             ->setDescription('Installs bundles web assets under a public directory, runs \'npm install\' and moves some files to the public directory root')
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/FoundationAssetsInstall.txt'))
         ;
@@ -53,88 +57,117 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $exitCode = parent::execute($input, $output);
 
         /** @var KernelInterface $kernel */
         $kernel = $this->getApplication()->getKernel();
-        $targetDir = rtrim($input->getArgument('target'), '/');
+        $targetArg = rtrim($input->getArgument('target'), '/');
 
-        if (!$targetDir) {
-            $targetDir = $this->getPublicDirectory($kernel->getContainer());
+        if (!$targetArg) {
+            $targetArg = $this->getPublicDirectory($kernel->getContainer());
         }
 
-        if (!is_dir($targetDir)) {
-            $targetDir = $kernel->getProjectDir().'/'.$targetDir;
+        if (!is_dir($targetArg)) {
+            $targetArg = "{$kernel->getProjectDir()}/{$targetArg}";
 
-            if (!is_dir($targetDir)) {
+            if (!is_dir($targetArg)) {
                 throw new InvalidArgumentException(sprintf('The target directory "%s" does not exist.', $input->getArgument('target')));
             }
         }
 
-        $bundlesDir = $targetDir.'/bundles/';
+        $bundlesDir = $targetArg.'/bundles/';
 
         $io = new SymfonyStyle($input, $output);
         $io->newLine();
+        $io->text('Installing assets as <info>hard copies</info>.');
+        $io->newLine();
 
-        try {
-            $originDir = null;
+        $rows = array();
+        $exitCode = 0;
+        $validAssetDirs = array();
+        /** @var BundleInterface $bundle */
+        foreach ($kernel->getBundles() as $bundle) {
+            if (!is_dir($originDir = $bundle->getPath().'/Resources/public')) continue;
 
-            foreach ($kernel->getBundles() as $bundle) {
-                if (!($bundle instanceof FoundationBundle)) continue;
+            $assetDir = preg_replace('/bundle$/', '', strtolower($bundle->getName()));
+            $targetDir = $bundlesDir.$assetDir;
+            $relativeTargetDirPath = str_replace("{$kernel->getProjectDir()}/",'', $targetDir);
+            $validAssetDirs[] = $assetDir;
 
-                $assetDir = preg_replace('/bundle$/', '', strtolower($bundle->getName()));
-                $originDir = $bundlesDir . $assetDir;
-            }
+            try {
+                $this->filesystem->remove($targetDir);
+                $this->hardCopy($originDir, $targetDir);
 
-            if (null === $originDir) throw new IOException('Foundation assets have not been installed.');
+                $io->success("Copied assets from {$bundle->getName()} to {$relativeTargetDirPath}");
 
-            $io->text('Running \'npm install\' on assets from the foundation bundle.');
-            $io->newLine();
+                if ($bundle instanceof BundleHasNodeModules) {
+                    $io->newLine();
+                    $io->text("Running 'npm install' on assets from {$bundle->getName()} ...");
 
-            $process = new Process(['npm','install'], $originDir);
-            $process->setIdleTimeout(null);
-            $process->setTimeout(null);
-            $process->run(function ($type, $buffer) use ($io) {$io->writeln($buffer);});
-
-            $files = [
-                '/js/app.js' => '/js/app.js',
-                '/scss/app.scss' => '/scss/app.scss',
-                '/scss/_settings.scss' => '/scss/_settings.scss',
-                '/scss/_fonts.scss' => '/scss/_fonts.scss'
-            ];
-
-            $fontawesomeWebfontsPath = "/node_modules/@fortawesome/fontawesome-free/webfonts";
-
-            if (is_dir($kernel->getProjectDir().'/'.$originDir.$fontawesomeWebfontsPath)) {
-                $webfontsDir = opendir($kernel->getProjectDir().'/'.$originDir.$fontawesomeWebfontsPath);
-                while (false !== ($entry = readdir($webfontsDir))) {
-                    if (!in_array($entry, ['.','..'])) {
-                        $files["{$fontawesomeWebfontsPath}/{$entry}"] = "/fonts/fontawesome/{$entry}";
-                    }
+                    if ($this->runNpmInstall($targetDir, $io)->isSuccessful())
+                        $io->success("Node modules succesfully installed in {$relativeTargetDirPath}", );
                 }
-            }
-            else {
-                $io->error("Fontawesome fonts not found!");
-            }
 
-            $io->text('Moving assets from foundation bundle ...');
+                if ($bundle instanceof BundleHasAssetsToMove) {
+                    $io->newLine();
+                    $io->text("Moving assets from {$relativeTargetDirPath}");
 
-            foreach ($files as $file => $target) {
-                $io->text("Copying {$file} ...");
-                if (!file_exists($targetDir.$file)) {
-                    $this->filesystem->copy($originDir.$file, $targetDir.$target);
-                    $io->text("{$file} copied.");
+                    $this->moveAssets($bundle->getFilesToMove($targetDir), $targetDir, $targetArg, $io);
                 }
-                else $io->text("{$file} already exists, skipping ...");
+
+            } catch (\Exception $e) {
+                $exitCode = 1;
+                $io->error($e->getMessage());
             }
+        }
 
-            $io->success("Foundation succesfully installed!\nRun 'foundation:assets:build' to compile the scss and/or sass files");
+        // remove the assets of the bundles that no longer exist
+        if (is_dir($bundlesDir)) {
+            $dirsToRemove = Finder::create()->depth(0)->directories()->exclude($validAssetDirs)->in($bundlesDir);
+            $this->filesystem->remove($dirsToRemove);
+        }
 
-        } catch (\Exception $e) {
-            $exitCode = 1;
-            $io->error($e->getMessage());
+        if (0 !== $exitCode) {
+            $io->error('Some errors occurred while installing assets.');
+        } else {
+            $io->success('All assets, if any, were successfully installed.');
         }
 
         return $exitCode;
+    }
+
+    /**
+     * Copies origin to target.
+     */
+    private function hardCopy(string $originDir, string $targetDir)
+    {
+        $this->filesystem->mkdir($targetDir, 0777);
+        // We use a custom iterator to ignore VCS files
+        $this->filesystem->mirror($originDir, $targetDir, Finder::create()->ignoreDotFiles(false)->in($originDir));
+    }
+
+    private function runNpmInstall(string $cwd, SymfonyStyle $io): Process
+    {
+        $process = new Process(['npm','install'], $cwd);
+        $process->setIdleTimeout(null);
+        $process->setTimeout(null);
+        $process->run(function ($type, $buffer) use ($io) {
+            if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE)
+                $io->write($buffer);
+        });
+
+        return $process;
+    }
+
+    private function moveAssets(array $assetsToMove, string $originDir, string $targetDir, SymfonyStyle $io)
+    {
+        foreach ($assetsToMove as $asset => $target) {
+            $io->newLine();
+            $io->text("Moving {$asset} ...");
+            if (!file_exists($targetDir.$target)) {
+                $this->filesystem->copy($originDir.$asset, $targetDir.$target);
+                $io->text("Done");
+            }
+            else $io->note("{$target} already exists");
+        }
     }
 }

@@ -19,6 +19,9 @@
         "symfony/security": "^4.2",
         "symfony/process": "^4.2"
     },
+    "suggest": {
+        "moncareyws/content-widgets-bundle": "For managing content with style"
+    },
     "autoload" : {
         "psr-4" : {
             "MoncareyWS\\FoundationBundle\\" : "src/"

@@ -12,5 +12,11 @@
                 <argument type="service" id="foundation.renderer.form_type_renderer" />
                 <tag name="foundation.maker.command" />
             </service>
+
+            <service id="foundation.maker.make_templating_structure" class="MoncareyWS\FoundationBundle\Maker\FoundationTemplatingStructure">
+                <argument type="service" id="filesystem" />
+                <argument>%kernel.project_dir%</argument>
+                <tag name="foundation.maker.command" />
+            </service>
         </services>
 </container>

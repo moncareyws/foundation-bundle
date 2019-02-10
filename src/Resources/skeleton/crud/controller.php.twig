@@ -2,30 +2,24 @@
 
 namespace {{ namespace }};
 
-{% block use_statements %}
 use {{ entity_full_class_name }};
 use {{ form_full_class_name }};
 {% if repository_full_class_name -%}
 use {{ repository_full_class_name }};
-{% endif %}
+{% endif -%}
 use Symfony\Bundle\FrameworkBundle\Controller\{{ parent_class_name }};
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 {% if 'annotation' == format -%}
 use Symfony\Component\Routing\Annotation\Route;
-{%- endif %}
-{% endblock use_statements %}
+{% endif %}
 
 /**
-{% block phpdoc_class_header %}
  * {{ entity }} controller.
-{% endblock phpdoc_class_header %}
-{% block phpdoc_class_annotations %}
-{% if 'annotation' == format %}
+{% if 'annotation' == format -%}
  *
- * @Route("/{{ route_path }}")
-{% endif %}
-{% endblock phpdoc_class_annotations %}
+ * @Route(name="{{ route_name }}_")
+{% endif -%}
  */
 class {{ class_name }} extends {{ parent_class_name }}
 {

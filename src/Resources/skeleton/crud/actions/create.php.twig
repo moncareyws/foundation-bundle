@@ -1,16 +1,16 @@
 
     /**
-{% block phpdoc_method_header %}
      * Creates a new {{ entity }}.
-{% endblock phpdoc_method_header %}
-{% block phpdoc_method_annotations %}
 {% if 'annotation' == format %}
      *
-     * @Route("/create", name="{{ route_name }}_create", methods={"GET","POST"})
+     * @Route("/{{ route_path }}/create", name="create", methods={"GET","POST"})
 {% endif %}
-{% endblock phpdoc_method_annotations %}
+     *
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function new(Request $request): Response
+    public function create(Request $request): Response
     {
         ${{ entity_var_singular }} = new {{ entity_class_name }}();
         $form = $this->createForm({{ form_class_name }}::class, ${{ entity_var_singular }});

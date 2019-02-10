@@ -1,15 +1,15 @@
     /**
-{% block phpdoc_method_header %}
      * Lists all {{ entity_var_plural }}.
-{% endblock phpdoc_method_header %}
-{% block phpdoc_method_annotations %}
-{% if 'annotation' == format %}
+{% if 'annotation' == format -%}
      *
-     * @Route("/", name="{{ route_name }}_index", methods={"GET"})
-{% endif %}
-{% endblock phpdoc_method_annotations %}
-     */
+     * @Route("/{{ route_path }}", name="index", methods={"GET"})
+{% endif -%}
 {% if repository_full_class_name %}
+     *
+     * @param {{ repository_class_name }} ${{ repository_var }}
+     *
+     * @return Response
+     */
     public function index({{ repository_class_name }} ${{ repository_var }}): Response
     {
         return $this->render('{{ templates_path }}/index.html.twig', [
@@ -17,6 +17,9 @@
         ]);
     }
 {% else %}
+     *
+     * @return Response
+     */
     public function index(): Response
     {
         ${{ entity_var_plural }} = $this->getDoctrine()

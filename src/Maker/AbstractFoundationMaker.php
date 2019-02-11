@@ -14,7 +14,7 @@ namespace MoncareyWS\FoundationBundle\Maker;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\MakerInterface;
-use Symfony\Component\Console\Command\Command;
+use MoncareyWS\FoundationBundle\Command\FoundationCommand as Command;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**

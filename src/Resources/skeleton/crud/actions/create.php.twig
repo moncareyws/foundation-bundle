@@ -3,7 +3,7 @@
      * Creates a new {{ entity }}.
 {% if 'annotation' == format %}
      *
-     * @Route("/{{ route_path }}/create", name="create", methods={"GET","POST"})
+     * @Route("/{{ route_path_prefix }}/create", name="create", methods={"GET","POST"})
 {% endif %}
      *
      * @param Request $request
@@ -21,7 +21,7 @@
             $entityManager->persist(${{ entity_var_singular }});
             $entityManager->flush();
 
-            return $this->redirectToRoute('{{ route_name }}_index');
+            return $this->redirectToRoute('{{ route_name_prefix }}_index');
         }
 
         return $this->render('{{ templates_path }}/create.html.twig', [

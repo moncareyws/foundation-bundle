@@ -13,7 +13,7 @@ use MoncareyWS\FoundationBundle\Generator\Generator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
-use Symfony\Component\Console\Command\Command;
+use MoncareyWS\FoundationBundle\Command\FoundationCommand as Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 

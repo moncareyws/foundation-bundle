@@ -1,0 +1,24 @@
+{{ route_name_prefix }}_index:
+    path:     /{{ index_route }}
+    controller: {{ controller }}::index
+    methods:  [GET]
+
+{{ route_name_prefix }}_create:
+    path:     /{{ route_path_prefix }}/create
+    controller: {{ controller }}::create
+    methods:  [GET, POST]
+
+{{ route_name_prefix }}_show:
+    path:     /{{ route_path_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}
+    controller: {{ controller }}::show
+    methods:  [GET]
+
+{{ route_name_prefix }}_edit:
+    path:     /{{ route_path_prefix }}/edit/{{ '{' ~ route_entity_parameter ~ '}' }}
+    controller: {{ controller }}::edit
+    methods:  [GET, POST]
+
+{{ route_name_prefix }}_delete:
+    path:     /{{ route_path_prefix }}/delete/{{ '{' ~ route_entity_parameter ~ '}' }}
+    controller: {{ controller }}::delete
+    methods:  [GET, DELETE]

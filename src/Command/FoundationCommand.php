@@ -105,4 +105,9 @@ final class FoundationCommand extends Command
             $this->maker->setApplication($application);
         }
     }
+
+    public function getGenerator(): Generator
+    {
+        return $this->generator;
+    }
 }

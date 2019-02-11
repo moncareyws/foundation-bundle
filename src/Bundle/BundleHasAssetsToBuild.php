@@ -1,15 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: samuel
- * Date: 07/02/19
- * Time: 23:55
- */
 
 namespace MoncareyWS\FoundationBundle\Bundle;
 
 
+/**
+ * Interface BundleHasAssetsToBuild
+ * @package MoncareyWS\FoundationBundle\Bundle
+ */
 interface BundleHasAssetsToBuild extends BundleHasNodeModules
 {
+    /**
+     * @return array
+     */
     public function getGulpSassPaths(): array;
 }

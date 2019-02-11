@@ -5,7 +5,7 @@
         <dt>{{ field|capitalize }}</dt>
         {%- if loop.first and (not hide_show) %}
 
-            <dd><a href="{{ "{{ path('" ~ route_name ~ "_show', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">{{ '{{ ' ~ entity_twig_var_singular ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></dd>
+            <dd><a href="{{ ("{{ path('" ~ route_name ~ "_show', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}")|raw }}">{{ '{{ ' ~ entity_twig_var_singular ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></dd>
 
         {%- elseif metadata.type in ['datetime'] %}
 
@@ -39,13 +39,13 @@
             <dd>
                 {%- if not hide_show %}
 
-                <a class="button" href="{{ "{{ path('" ~ route_name ~ "_show', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
+                <a class="button" href="{{ ("{{ path('" ~ route_name ~ "_show', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}")|raw }}">
                     View
                 </a>
 
                 {%- else %}
 
-                <a class="button" href="{{ "{{ path('" ~ route_name ~ "_index') }}" }}">
+                <a class="button" href="{{ ("{{ path('" ~ route_name ~ "_index') }}")|raw }}">
                     <i class="fa fa-chevron-left"></i>
                     Back to list
                 </a>
@@ -53,7 +53,7 @@
                 {%- endif %}
                 {%- if not hide_edit %}
 
-                <a class="button" href="{{ "{{ path('" ~ route_name ~ "_edit', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
+                <a class="button" href="{{ ("{{ path('" ~ route_name ~ "_edit', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}")|raw }}">
                     <i class="fa fa-edit"></i>
                     Edit
                 </a>
@@ -61,7 +61,7 @@
                 {%- endif %}
                 {%- if not hide_delete %}
 
-                <a class="button" href="{{ "{{ path('" ~ route_name ~ "_delete', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}" }}">
+                <a class="button" href="{{ ("{{ path('" ~ route_name ~ "_delete', { '" ~ entity_identifier ~ "': " ~ entity_twig_var_singular ~ "."~ entity_identifier ~" }) }}")|raw }}">
                     <i class="fa fa-trash"></i>
                     Delete
                 </a>

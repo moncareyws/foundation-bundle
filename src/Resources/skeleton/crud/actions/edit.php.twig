@@ -3,7 +3,7 @@
      * Displays a form to edit an existing {{ entity }}.
 {% if 'annotation' == format %}
      *
-     * @Route("/{{ route_path }}/edit/{{ '{' ~ entity_identifier ~ '}' }}", name="edit", methods={"GET", "POST"})
+     * @Route("/{{ route_path_prefix }}/edit/{{ '{' ~ entity_identifier ~ '}' }}", name="edit", methods={"GET", "POST"})
 {% endif %}
      *
      * @param Request $request
@@ -19,7 +19,7 @@
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
         
-            return $this->redirectToRoute('{{ route_name }}_index', [
+            return $this->redirectToRoute('{{ route_name_prefix }}_index', [
                 '{{ entity_identifier }}' => ${{ entity_var_singular }}->get{{ entity_identifier|capitalize }}(),
             ]);
         }

@@ -1,76 +1,58 @@
 <?php
 
-{% block use_statements %}
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
-{% endblock use_statements %}
 
-{% block definition %}
 $collection = new RouteCollection();
-{% endblock definition %}
 
-{% block body %}
-{% if 'index' in actions %}
 $collection->add('{{ route_name_prefix }}_index', new Route(
-    '/{{ route_prefix_pluralized }}',
-    array('_controller' => '{{ bundle }}:{{ entity }}:index'),
-    array(),
-    array(),
+    '/{{ index_route }}',
+    ['_controller' => '{{ controller }}::index'],
+    [],
+    [],
     '',
-    array(),
-    array('GET')
+    [],
+    ['GET']
 ));
-{% endif %}
 
-{% if 'create' in actions %}
-    $collection->add('{{ route_name_prefix }}_create', new Route(
-    '/{{ route_prefix }}/create',
-    array('_controller' => '{{ bundle }}:{{ entity }}:create'),
-    array(),
-    array(),
+$collection->add('{{ route_name_prefix }}_create', new Route(
+    '/{{ route_path_prefix }}/create',
+    ['_controller' => '{{ controller }}::create'],
+    [],
+    [],
     '',
-    array(),
-    array('GET', 'POST')
+    [],
+    ['GET', 'POST']
     ));
-{% endif %}
 
-{% if 'show' in actions %}
 $collection->add('{{ route_name_prefix }}_show', new Route(
-    '/{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}',
-    array('_controller' => '{{ bundle }}:{{ entity }}:show'),
-    array(),
-    array(),
+    '/{{ route_path_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}',
+    ['_controller' => '{{ controller }}::show'],
+    [],
+    [],
     '',
-    array(),
-    array('GET')
+    [],
+    ['GET']
 ));
-{% endif %}
 
-{% if 'edit' in actions %}
 $collection->add('{{ route_name_prefix }}_edit', new Route(
-    '/{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/edit',
-    array('_controller' => '{{ bundle }}:{{ entity }}:edit'),
-    array(),
-    array(),
+    '/{{ route_path_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/edit',
+    ['_controller' => '{{ controller }}::edit'],
+    [],
+    [],
     '',
-    array(),
-    array('GET', 'POST')
+    [],
+    ['GET', 'POST']
 ));
-{% endif %}
 
-{% if 'delete' in actions %}
 $collection->add('{{ route_name_prefix }}_delete', new Route(
-    '/{{ route_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/delete',
-    array('_controller' => '{{ bundle }}:{{ entity }}:delete'),
-    array(),
-    array(),
+    '/{{ route_path_prefix }}/{{ '{' ~ route_entity_parameter ~ '}' }}/delete',
+    ['_controller' => '{{ controller }}::delete'],
+    [],
+    [],
     '',
-    array(),
-    array('GET', 'DELETE')
+    [],
+    ['GET', 'DELETE']
 ));
-{% endif %}
-{% endblock body %}
 
-{% block return %}
 return $collection;
-{% endblock return %}

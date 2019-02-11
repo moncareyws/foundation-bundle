@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * {{ entity }} controller.
 {% if 'annotation' == format -%}
  *
- * @Route(name="{{ route_name }}_")
+ * @Route(name="{{ route_name_prefix }}_")
 {% endif -%}
  */
 class {{ class_name }} extends {{ parent_class_name }}

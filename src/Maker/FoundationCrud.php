@@ -7,7 +7,7 @@ use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use MoncareyWS\FoundationBundle\Generator\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
-use Symfony\Component\Console\Command\Command;
+use MoncareyWS\FoundationBundle\Command\FoundationCommand as Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Bundle\MakerBundle\Doctrine\DoctrineHelper;
 use MoncareyWS\FoundationBundle\Renderer\FormTypeRenderer;
@@ -15,6 +15,7 @@ use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Doctrine\Common\Inflector\Inflector;
 
@@ -53,8 +54,10 @@ class FoundationCrud extends AbstractFoundationMaker
         $command
             ->setDescription('Creates CRUD for Doctrine entity class')
             ->addArgument('entity', InputArgument::OPTIONAL, sprintf('The class name of the entity to create CRUD (e.g. <fg=yellow>%s</>)', Str::asClassName(Str::getRandomTerm())))
-            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'Configuration format (php, xml, yml, or annotation)')
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, 'Configuration format (php, xml, yaml, or annotation)')
             ->addOption('route-prefix', 'r', InputOption::VALUE_REQUIRED, 'Route prefix')
+            ->addOption('pluralize-index-route', 'p', InputOption::VALUE_NONE, 'Pluralize index route')
+            ->addOption('entity-route-parameter', 'i', InputOption::VALUE_REQUIRED, 'Entity field to use as route parameter')
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/FoundationCrud.txt'))
         ;
 
@@ -87,7 +90,7 @@ class FoundationCrud extends AbstractFoundationMaker
             $formatOption = $command->getDefinition()->getOption('format');
 
             $formatQuestion = new Question($formatOption->getDescription(), 'annotation');
-            $formatQuestion->setAutocompleterValues(['php','xml','yml','annotation']);
+            $formatQuestion->setAutocompleterValues(['php','xml','yaml','annotation']);
             $formatQuestion->setValidator(array('MoncareyWS\FoundationBundle\Generator\Validator', 'validateFormat'));
 
             $format = $io->askQuestion($formatQuestion);
@@ -108,6 +111,37 @@ class FoundationCrud extends AbstractFoundationMaker
             $routePrefix = $io->askQuestion($routePrefixQuestion);
 
             $input->setOption('route-prefix', $routePrefix);
+        }
+
+        // pluralize index route
+        $pluralizeIndexRoute = $input->getOption('pluralize-index-route');
+
+        if (!$pluralizeIndexRoute) {
+            $pluralizeIndexRouteOption = $command->getDefinition()->getOption('pluralize-index-route');
+
+            $pluralizeIndexRouteQuestion = new ConfirmationQuestion($pluralizeIndexRouteOption->getDescription(), 'yes');
+            $pluralizeIndexRouteQuestion->setAutocompleterValues(['yes','no']);
+
+            $pluralizeIndexRoute = $io->askQuestion($pluralizeIndexRouteQuestion);
+
+            $input->setOption('pluralize-index-route', $pluralizeIndexRoute);
+        }
+
+        $entityRouteParameter = $input->getOption('entity-route-parameter');
+
+        if (null === $entityRouteParameter) {
+            $entityRouteParameterOption = $command->getDefinition()->getOption('entity-route-parameter');
+
+            $entityClassDetails = $command->getGenerator()->createClassNameDetails($entity, 'Entity\\');
+            $entityDoctrineDetails = $this->doctrineHelper->createDoctrineDetails($entityClassDetails->getFullName());
+            $fields = array_keys($entityDoctrineDetails->getDisplayFields());
+
+            $entityRouteParameterQuestion = new Question($entityRouteParameterOption->getDescription(), 'id');
+            $entityRouteParameterQuestion->setAutocompleterValues($fields);
+
+            $entityRouteParameter = $io->askQuestion($entityRouteParameterQuestion);
+
+            $input->setOption('entity-route-parameter', $entityRouteParameter);
         }
 
     }
@@ -211,7 +245,14 @@ class FoundationCrud extends AbstractFoundationMaker
         $entityTwigVarSingular = Str::asTwigVariable($entityVarSingular);
 
         $routeNamePrefix = Str::asRouteName($controllerClassDetails->getRelativeNameWithoutSuffix());
+        $routePathPrefix = $input->getOption('route-prefix');
+        $indexRoutePath = $input->getOption('pluralize-index-route') ? Inflector::pluralize($routePathPrefix) : $routePathPrefix;
+
+        $entityRouteParameter = $input->getOption('entity-route-parameter');
+
         $templatesPath = Str::asFilePath($controllerClassDetails->getRelativeNameWithoutSuffix());
+
+        $configFormat = $input->getOption('format');
 
         $generator->generateController(
             $controllerClassDetails->getFullName(),
@@ -223,15 +264,16 @@ class FoundationCrud extends AbstractFoundationMaker
                 'entity' => $entityClassDetails->getShortName(),
                 'form_full_class_name' => $formClassDetails->getFullName(),
                 'form_class_name' => $formClassDetails->getShortName(),
-                'route_path' => $input->getOption('route-prefix'),
-                'route_name' => $routeNamePrefix,
+                'route_path_prefix' => $routePathPrefix,
+                'index_route' => $indexRoutePath,
+                'route_name_prefix' => $routeNamePrefix,
                 'templates_path' => $templatesPath,
                 'entity_var_plural' => $entityVarPlural,
                 'entity_twig_var_plural' => $entityTwigVarPlural,
                 'entity_var_singular' => $entityVarSingular,
                 'entity_twig_var_singular' => $entityTwigVarSingular,
-                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
-                'format' => $input->getOption('format'),
+                'entity_identifier' => $entityRouteParameter,
+                'format' => $configFormat,
             ],
                 $repositoryVars
             )
@@ -247,19 +289,19 @@ class FoundationCrud extends AbstractFoundationMaker
             'delete' => [
                 'route_name' => $routeNamePrefix,
                 'entity_twig_var_singular' => $entityTwigVarSingular,
-                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+                'entity_identifier' => $entityRouteParameter,
             ],
             'edit' => [
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_singular' => $entityTwigVarSingular,
-                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+                'entity_identifier' => $entityRouteParameter,
                 'route_name' => $routeNamePrefix,
             ],
             'index' => [
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_plural' => $entityTwigVarPlural,
                 'entity_twig_var_singular' => $entityTwigVarSingular,
-                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+                'entity_identifier' => $entityRouteParameter,
                 'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
                 'route_name' => $routeNamePrefix,
                 'templates_path' => $templatesPath,
@@ -271,7 +313,7 @@ class FoundationCrud extends AbstractFoundationMaker
             'show' => [
                 'entity_class_name' => $entityClassDetails->getShortName(),
                 'entity_twig_var_singular' => $entityTwigVarSingular,
-                'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+                'entity_identifier' => $entityRouteParameter,
                 'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
                 'route_name' => $routeNamePrefix,
                 'templates_path' => $templatesPath,
@@ -290,7 +332,7 @@ class FoundationCrud extends AbstractFoundationMaker
         $variables = [
             'entity_class_name' => $entityClassDetails->getShortName(),
             'entity_twig_var_singular' => $entityTwigVarSingular,
-            'entity_identifier' => $entityDoctrineDetails->getIdentifier(),
+            'entity_identifier' => $entityRouteParameter,
             'entity_fields' => $entityDoctrineDetails->getDisplayFields(),
             'route_name' => $routeNamePrefix,
         ];
@@ -304,6 +346,20 @@ class FoundationCrud extends AbstractFoundationMaker
             "crud/views/entity_view_mode/entity_teaser.html.twig.twig",
             $variables
         );
+
+        if (in_array($configFormat, ['php','xml','yaml'])) {
+            $generator->generateFile(
+                sprintf("config/routes/%s.%s", strtolower($entityClassDetails->getShortName()), $configFormat),
+                "crud/config/routing.{$configFormat}.twig",
+                [
+                    'route_name_prefix' => $routeNamePrefix,
+                    'route_path_prefix' => $routePathPrefix,
+                    'index_route' => $indexRoutePath,
+                    'route_entity_parameter' => $entityRouteParameter,
+                    'controller' => $controllerClassDetails->getFullName(),
+                ]
+            );
+        }
 
         $generator->writeChanges();
 

@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block form_row %}
-    <div class="small-12 columns">
+    <div class="cell">
         {{ form_label(form) }}
         {{ form_widget(form) }}
         {{ form_errors(form) }}
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block button_row %}
-    <div class="small-12 columns">
+    <div class="cell">
         {{ form_widget(form) }}
     </div>
 {% endblock %}
@@ -130,43 +130,48 @@
     {% endspaceless %}
 {% endblock %}
 
-{% block custom_select_widget %}
+{% macro select_options(choices, selected) %}
+    {% import _self as fields %}
+    {% for group_label, choice in choices %}
+        {% if choice is iterable %}
+            <optgroup label="{{ group_label }}">
+                {{ fields.select_options(choice, selected) }}
+            </optgroup>
+        {% else %}
+            <option value="{{ choice.value }}"{% if choice.value == selected %} selected="selected"{% endif %}>{{ choice.label }}</option>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
 
-    <div class="select-dropdown" data-input="#{{ id }}" data-view="#{{ id }}_view" data-options="#{{ id }}_options">
-        <input type="hidden" id="{{ id }}" name="{{ full_name }}"{{ (form.vars.value is same as(false)) ?: ' value=' ~ (form.vars.value.id is defined ? form.vars.value.id : form.vars.value )}}>
-        <input type="text" class="select-dropdown-input" id="{{ id }}_view" name="{{ name }}_view" placeholder="{{ placeholder }}" data-toggle="{{ id }}_dropdown" readonly  value="{{ (form.vars.value is same as(false)) ? placeholder.vars.label : form.vars.data }}">
-        <div class="dropdown-pane" id="{{ id }}_dropdown" data-dropdown data-close-on-click="true">
-            <ul class="select-dropdown-list" id="{{ id }}_options">
-                {% for choice in choices %}
-
-                    <li class="select-dropdown-option">
-                        <a data-value="{{ choice.value }}" >{{ choice.label }}</a>
-                    </li>
-                {% endfor %}
-
-            </ul>
-        </div>
-        <i class="fa fa-caret-down select-dropdown-caret" data-toggle="{{ id }}_dropdown"></i>
-    </div>
-
+{% block foundation_select_widget %}
+    {% import _self as fields %}
+    <select id="{{ id }}" name="{{ full_name }}" data-select data-placeholder="{{ placeholder }}">
+        {% if preferred_choices %}
+            {{ fields.select_options(preferred_choices, value) }}
+            {% if choices and not (separator is null) %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {{ fields.select_options(choices, value) }}
+    </select>
 {% endblock %}
 
 {% block fdn_choice_widget %}
-    {{ block('custom_select_widget') }}
+    {{ block('foundation_select_widget') }}
 {% endblock %}
 
 {% block choise_widget %}
-    {{ block('custom_select_widget') }}
+    {{ block('foundation_select_widget') }}
 {% endblock %}
 
 {% block entity_widget %}
-    {{ block('custom_select_widget') }}
+    {{ block('foundation_select_widget') }}
 {% endblock %}
 
 {% block fdn_entity_widget %}
     {% if create_new_button %}
         <div class="form-entity-reference-wrapper has-create-button">
-            {{ block('custom_select_widget') }}
+            {{ block('foundation_select_widget') }}
             <span class="inline-form-or">or</span>
             <a class="create-button modal-link"
                href="{{ create_new_button.href }}?dropdown_id={{ form.vars.id }}"
@@ -177,7 +182,7 @@
         </div>
     {% else %}
         <div class="form-entity-reference-wrapper">
-            {{ block('custom_select_widget') }}
+            {{ block('foundation_select_widget') }}
         </div>
     {% endif %}
 {% endblock %}

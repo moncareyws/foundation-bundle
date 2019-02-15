@@ -14,11 +14,13 @@
 
 {% endblock %}
 
-{% block scripts %}
-<script src="/bundles/foundation/node_modules/jquery/dist/jquery.js"></script>
-<script src="/bundles/foundation/node_modules/what-input/dist/what-input.js"></script>
-<script src="/bundles/foundation/node_modules/foundation-sites/dist/js/foundation.js"></script>
-<script src="/js/app.js"></script>
+{% block javascripts %}
+    {% for js_file in js_files %}
+    <script src="{{ js_file }}"></script>
+    {% endfor %}
+    {% for js_file in js_files_last %}
+    <script src="{{ js_file }}"></script>
+    {% endfor %}
 {% endblock %}
 </body>
 </html>

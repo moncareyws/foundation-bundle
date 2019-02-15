@@ -12,8 +12,9 @@ namespace MoncareyWS\FoundationBundle\Bundle;
 interface BundleHasAssetsToMove
 {
     /**
-     * @param string $bundleAssetsDir
+     * @param string $bundleAsstesDir
+     *
      * @return array
      */
-    public function getFilesToMove(string $bundleAssetsDir): array;
+    public function getFilesToMove(string $bundleAsstesDir): array;
 }

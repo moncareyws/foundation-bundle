@@ -24,11 +24,13 @@ class FoundationBundle extends Bundle implements BundleHasAssetsToBuild, BundleH
         return [
             'node_modules/foundation-sites/scss',
             'node_modules/motion-ui/src',
-            'node_modules/@fortawesome/fontawesome-free/scss'
+            'node_modules/@fortawesome/fontawesome-free/scss',
+            'node_modules/@moncareyws/foundation-perfect-scrollbar/src/scss/plugin',
+            'node_modules/@moncareyws/foundation-select/src/scss/plugin',
         ];
     }
 
-    public function getFilesToMove($bundleAsstesDir): array
+    public function getFilesToMove(string $bundleAsstesDir): array
     {
         $files = [
             '/js/app.js' => '/js/app.js',

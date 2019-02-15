@@ -18,7 +18,9 @@
     "jquery": ">=3.0.0",
     "motion-ui": "~2.0.0",
     "what-input": "^5.1.2",
-    "@fortawesome/fontawesome-free": "^5.7.1"
+    "@fortawesome/fontawesome-free": "^5.7.1",
+    "@moncareyws/foundation-select": "^1.0.1",
+    "@moncareyws/foundation-perfect-scrollbar": "^1.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^9.1.5",

@@ -34,6 +34,28 @@ class FoundationExtension extends Extension implements PrependExtensionInterface
 
             $twigConfig['form_themes'][] = '@foundation/form/fields.html.twig';
 
+            if (!isset($twigConfig['globals']))
+                $twigConfig['globals'] = [];
+
+            if (!isset($twigConfig['globals']['js_files']))
+                $twigConfig['globals']['js_files'] = [];
+
+            $twigConfig['globals']['js_files']+= [
+                '/bundles/foundation/node_modules/jquery/dist/jquery.js',
+                '/bundles/foundation/node_modules/what-input/dist/what-input.js',
+                '/bundles/foundation/node_modules/foundation-sites/dist/js/foundation.js',
+                '/bundles/foundation/node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.js',
+                '/bundles/foundation/node_modules/@moncareyws/foundation-perfect-scrollbar/dist/js/foundation.perfectScrollbar.js',
+                '/bundles/foundation/node_modules/@moncareyws/foundation-select/dist/js/foundation.select.js',
+            ];
+
+            if (!isset($twigConfig['globals']['js_files_last']))
+                $twigConfig['globals']['js_files_last'] = [];
+
+            $twigConfig['globals']['js_files_last']+= [
+                '/js/app.js'
+            ];
+
             $container->loadFromExtension('twig', $twigConfig);
         }
     }

@@ -41,19 +41,13 @@ class FoundationExtension extends Extension implements PrependExtensionInterface
                 $twigConfig['globals']['js_files'] = [];
 
             $twigConfig['globals']['js_files']+= [
-                '/bundles/foundation/node_modules/jquery/dist/jquery.js',
-                '/bundles/foundation/node_modules/what-input/dist/what-input.js',
-                '/bundles/foundation/node_modules/foundation-sites/dist/js/foundation.js',
-                '/bundles/foundation/node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.js',
-                '/bundles/foundation/node_modules/@moncareyws/foundation-perfect-scrollbar/dist/js/foundation.perfectScrollbar.js',
-                '/bundles/foundation/node_modules/@moncareyws/foundation-select/dist/js/foundation.select.js',
-            ];
-
-            if (!isset($twigConfig['globals']['js_files_last']))
-                $twigConfig['globals']['js_files_last'] = [];
-
-            $twigConfig['globals']['js_files_last']+= [
-                '/js/app.js'
+                '/bundles/foundation/node_modules/jquery/dist/jquery.js' => 0,
+                '/bundles/foundation/node_modules/what-input/dist/what-input.js' => 1,
+                '/bundles/foundation/node_modules/foundation-sites/dist/js/foundation.js' => 2,
+                '/bundles/foundation/node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.js' => 10,
+                '/bundles/foundation/node_modules/@moncareyws/foundation-perfect-scrollbar/dist/js/foundation.perfectScrollbar.js' => 11,
+                '/bundles/foundation/node_modules/@moncareyws/foundation-select/dist/js/foundation.select.js' => 12,
+                '/js/app.js' => 80
             ];
 
             $container->loadFromExtension('twig', $twigConfig);

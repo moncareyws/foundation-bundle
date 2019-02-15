@@ -15,10 +15,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    {% for js_file in js_files %}
-    <script src="{{ js_file }}"></script>
-    {% endfor %}
-    {% for js_file in js_files_last %}
+    {% for js_file, priority in js_files|sort %}
     <script src="{{ js_file }}"></script>
     {% endfor %}
 {% endblock %}

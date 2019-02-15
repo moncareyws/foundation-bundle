@@ -93,7 +93,7 @@ class FoundationAssetsBuildCommand extends Command
                         $item = $prefix.$item;
                     }, $prefix);
 
-                    $gulpSassPaths+= $gulpSassPathsTmp;
+                    $gulpSassPaths = array_merge($gulpSassPaths, $gulpSassPathsTmp);
                 }
             }
 

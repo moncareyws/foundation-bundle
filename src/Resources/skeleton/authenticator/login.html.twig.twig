@@ -8,7 +8,7 @@
         <div class="grid-x grid-margin-x">
         {{ '{% if error %}' }}
             <div class="cell">
-                <div class="callout alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                <div class="callout alert">{{ '{{ error.messageKey|trans(error.messageData, \'security\') }}' }}</div>
             </div>
         {{ '{% endif %}' }}
 
@@ -22,12 +22,11 @@
             </div>
 
             <div class="cell">
-
+                <label for="input_password" class="show-for-sr">Password</label>
+                <input type="password" name="password" id="input_password" class="form-control" placeholder="Password" required>
             </div>
-    <label for="inputPassword" class="show-for-sr">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
 
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
         {{ '{#' }}
             Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
@@ -41,9 +40,7 @@
         {{ '#}' }}
 
             <div class="cell">
-                <button class="btn btn-lg btn-primary" type="submit">
-                    Sign in
-                </button>
+                <button class="button primary" type="submit">Log in</button>
             </div>
         </div>
     </div>

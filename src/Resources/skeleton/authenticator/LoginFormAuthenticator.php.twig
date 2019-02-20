@@ -87,7 +87,7 @@ class {{ class_name }} extends AbstractFormLoginAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        {% if user_needs_encode %}
+        {% if user_needs_encoder %}
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
         {% else %}
         // Check the user's password or other credentials and return true or false

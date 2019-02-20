@@ -17,8 +17,8 @@
             </div>
 
             <div class="cell">
-                <label for="input_{{ username_field }}" class="show-for-sr">{{ username_label }}</label>
-                <input type="{% if username_is_email %}email{% else %}text{% endif %}" value="{{ last_username }}" name="{{ username_field }}" id="input_{{ username_field }}" class="form-control" placeholder="{{ username_label }}" required autofocus>
+                <label for="input_{{ '{{ username_field }}' }}" class="show-for-sr">{{ '{{ username_label }}' }}</label>
+                <input type="{{ '{% if username_is_email %}email{% else %}text{% endif %}' }}" value="{{ '{{ last_username }}' }}" name="{{ '{{ username_field }}' }}" id="input_{{ '{{ username_field }}' }}" class="form-control" placeholder="{{ '{{ username_label }}' }}" required autofocus>
             </div>
 
             <div class="cell">
@@ -26,7 +26,7 @@
                 <input type="password" name="password" id="input_password" class="form-control" placeholder="Password" required>
             </div>
 
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <input type="hidden" name="_csrf_token" value="{{ '{{ csrf_token('authenticate') }}' }}">
 
         {{ '{#' }}
             Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.

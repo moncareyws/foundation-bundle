@@ -2,7 +2,7 @@
 
 {{ '{% block title %}{{ parent() }} | Log in{% endblock %}' }}
 
-{{ '{% block body %}' }}
+{{ '{% block content %}' }}
 <form method="post">
     <div class="grid-container full">
         <div class="grid-x grid-margin-x">
@@ -18,7 +18,7 @@
 
             <div class="cell">
                 <label for="input_{{ username_field }}" class="show-for-sr">{{ username_label }}</label>
-                <input type="{% if username_is_email %}email{% else %}text{% endif %}" value="{{ last_username }}" name="{{ username_field }}" id="input_{{ username_field }}" class="form-control" placeholder="{{ username_label }}" required autofocus>
+                <input type="{% if username_is_email %}email{% else %}text{% endif %}" value="{{ '{{ last_username  }}' }}" name="{{ username_field }}" id="input_{{ username_field }}" class="form-control" placeholder="{{ username_label }}" required autofocus>
             </div>
 
             <div class="cell">

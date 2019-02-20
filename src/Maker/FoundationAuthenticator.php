@@ -66,7 +66,7 @@ class FoundationAuthenticator extends AbstractFoundationMaker
     {
         $command
             ->setDescription('Creates a Guard authenticator of different flavors')
-            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeAuth.txt'));
+            ->setHelp(file_get_contents(__DIR__.'/../Resources/help/FoundationAuth.txt'));
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command)

@@ -70,7 +70,7 @@ class {{ class_name }} extends AbstractFormLoginAuthenticator
         }
 
         {% if user_is_entity %}
-        $user = $this->entityManager->getRepository({{ user_class_name }}::class)->findOneBy(['$username_field' => $credentials['$username_field']]);
+        $user = $this->entityManager->getRepository({{ user_class_name }}::class)->findOneBy(['{{ username_field }}' => $credentials['{{ username_field }}']]);
         {% else %}
         // Load / create our user however you need.
         // You can do this by calling the user provider, or with custom logic here.

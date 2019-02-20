@@ -59,7 +59,7 @@ class FoundationAuthenticator extends AbstractFoundationMaker
 
     public static function getCommandName(): string
     {
-        return 'founbdation:make:auth';
+        return 'foundation:make:auth';
     }
 
     public function configureCommand(Command $command, InputConfiguration $inputConfig)

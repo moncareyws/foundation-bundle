@@ -7,6 +7,14 @@
         <services>
             <defaults public="false" />
 
+            <service id="foundation.maker.make_authenticator" class="MoncareyWS\FoundationBundle\Maker\FoundationAuthenticator">
+                <argument type="service" id="foundation.maker.file_manager" />
+                <argument type="service" id="maker.security_config_updater" />
+                <argument type="service" id="foundation.maker.generator" />
+                <argument type="service" id="maker.doctrine_helper" />
+                <tag name="foundation.maker.command" />
+            </service>
+
             <service id="foundation.maker.make_crud" class="MoncareyWS\FoundationBundle\Maker\FoundationCrud">
                 <argument type="service" id="maker.doctrine_helper" />
                 <argument type="service" id="foundation.renderer.form_type_renderer" />

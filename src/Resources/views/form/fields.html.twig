@@ -5,6 +5,8 @@
     {% if form_method != method %}
         <input type="hidden" name="_method" value="{{ method|upper }}" />
     {% endif %}
+        <div class="grid-container full">
+            <div class="grid-x grid-margin-x">
 {% endblock %}
 
 {% block form_row %}
@@ -188,5 +190,8 @@
 {% endblock %}
 
 {% block form_end %}
+
+            </div>
+        </div>
     </form>
 {% endblock %}

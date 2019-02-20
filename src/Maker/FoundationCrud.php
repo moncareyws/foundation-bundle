@@ -2,7 +2,6 @@
 
 namespace MoncareyWS\FoundationBundle\Maker;
 
-
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use MoncareyWS\FoundationBundle\Generator\Generator;
@@ -18,6 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Doctrine\Common\Inflector\Inflector;
+
 
 class FoundationCrud extends AbstractFoundationMaker
 {

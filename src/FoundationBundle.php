@@ -36,6 +36,7 @@ class FoundationBundle extends Bundle implements BundleHasAssetsToBuild, BundleH
             '/js/app.js' => '/js/app.js',
             '/scss/app.scss' => '/scss/app.scss',
             '/scss/_settings.scss' => '/scss/_settings.scss',
+            '/scss/_imports.scss' => '/scss/_imports.scss',
             '/scss/_fonts.scss' => '/scss/_fonts.scss'
         ];
 

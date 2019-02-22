@@ -53,4 +53,26 @@ class FoundationBundle extends Bundle implements BundleHasAssetsToBuild, BundleH
         return $files;
     }
 
+    /**
+     * @return array
+     */
+    public function getSassImports(): array
+    {
+        return [
+            'foundation-perfect-scrollbar',
+            'foundation-select'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSassIncludes(): array
+    {
+        return [
+            'foundation-perfect-scrollbar',
+            'foundation-select'
+        ];
+    }
+
 }

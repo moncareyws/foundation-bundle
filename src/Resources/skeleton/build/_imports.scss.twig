@@ -1,0 +1,7 @@
+{% for import in imports %}
+@import "{{ import }}";
+{% endfor %}
+
+{% for include in includes %}
+@include {{ include }};
+{% endfor %}

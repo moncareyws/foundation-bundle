@@ -8,10 +8,6 @@
 @import 'foundation';
 @import 'motion-ui';
 
-// Foundation Plugins
-@import "foundation-perfect-scrollbar";
-@import "foundation-select";
-
 // Global styles
 @include foundation-global-styles;
 @include foundation-forms;
@@ -71,6 +67,5 @@
 @include motion-ui-transitions;
 @include motion-ui-animations;
 
-
-@include foundation-perfect-scrollbar;
-@include foundation-select;
+// Bundles imports
+@import "imports";

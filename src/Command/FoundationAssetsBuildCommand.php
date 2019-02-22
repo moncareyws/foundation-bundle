@@ -17,16 +17,27 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
+use Twig\Environment;
 
 class FoundationAssetsBuildCommand extends Command
 {
     use CommandNeedsPublicDir;
 
     protected static $defaultName = 'foundation:assets:build';
+
+    private $twig;
+
+    public function __construct(Environment $twig)
+    {
+        parent::__construct();
+
+        $this->twig = $twig;
+    }
 
     /**
      * {@inheritdoc}
@@ -76,6 +87,8 @@ class FoundationAssetsBuildCommand extends Command
         try {
 
             $gulpSassPaths = [];
+            $sassImports = [];
+            $sassIncludes = [];
 
             foreach ($kernel->getBundles() as $bundle) {
                 $assetDir = preg_replace('/bundle$/', '', strtolower($bundle->getName()));
@@ -94,6 +107,9 @@ class FoundationAssetsBuildCommand extends Command
                     }, $prefix);
 
                     $gulpSassPaths = array_merge($gulpSassPaths, $gulpSassPathsTmp);
+
+                    $sassImports = array_merge($sassImports, $bundle->getSassImports());
+                    $sassIncludes = array_merge($sassIncludes, $bundle->getSassIncludes());
                 }
             }
 
@@ -102,6 +118,13 @@ class FoundationAssetsBuildCommand extends Command
 
             $gulpSassPathsJsonFile = "{$cwd}/gulp_sass_paths.json";
             file_put_contents($gulpSassPathsJsonFile, json_encode($gulpSassPaths));
+
+            $sassImportsFile = "{$targetArg}/scss/_imports.scss";
+            $sassImportsContent = $this->twig->render('@foundation_skeleton/build/_imports.scss.twig', [
+                'imports' => $sassImports,
+                'includes' => $sassIncludes
+            ]);
+            file_put_contents($sassImportsFile, $sassImportsContent);
 
             $io->text("Starting gulp {$gulpTask}");
             $io->newLine();

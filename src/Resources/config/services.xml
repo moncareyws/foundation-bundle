@@ -35,6 +35,7 @@
             </service>
 
             <service id="foundation.console.command.assets_build" class="MoncareyWS\FoundationBundle\Command\FoundationAssetsBuildCommand">
+                <argument type="service" id="twig" />
                 <tag name="console.command" command="foundation:assets:build" />
             </service>
         </services>

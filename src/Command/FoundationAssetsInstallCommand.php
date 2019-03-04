@@ -104,7 +104,7 @@ class FoundationAssetsInstallCommand extends AssetsInstallCommand
                     $io->text("Running 'npm install' on assets from {$bundle->getName()} ...");
 
                     if ($this->runNpmInstall($targetDir, $io)->isSuccessful())
-                        $io->success("Node modules succesfully installed in {$relativeTargetDirPath}", );
+                        $io->success("Node modules succesfully installed in {$relativeTargetDirPath}");
                 }
 
                 if ($bundle instanceof BundleHasAssetsToMove) {
